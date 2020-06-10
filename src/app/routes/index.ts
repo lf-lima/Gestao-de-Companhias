@@ -1,19 +1,12 @@
+import loginRouter from './login'
+import userRouter from './user'
 import { Router } from 'express'
-// import das rotas
-import userRoutes from './user'
-import loginRoutes from './login'
 
-const router = Router()
+const routers = [loginRouter, userRouter]
+const mainRouter = Router()
 
-// RAIZ
-router.get('/', async (req, res) => {
-  return res.send('<h1> Hellow Sun </h1>')
+routers.map((currentRouter) => {
+  mainRouter.use(currentRouter.route, currentRouter.router)
 })
 
-const usersUrl = '/users'
-const loginUrl = '/login'
-
-router.use(usersUrl, userRoutes)
-router.use(loginUrl, loginRoutes)
-
-export default router
+export default mainRouter

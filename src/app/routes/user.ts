@@ -1,13 +1,17 @@
-import { Router } from 'express'
 import userController from '../controllers/user'
+import { BaseRouter } from './base'
 import authMiddleware from '../middlewares/authentication'
 
-const router = Router()
+class UserRouter extends BaseRouter {
+  constructor () {
+    super('/users')
 
-router.get('/', authMiddleware, userController.findAll)
-router.get('/:userId', authMiddleware, userController.findById)
-router.post('/', userController.store)
-router.put('/', authMiddleware, userController.update)
-router.delete('/', authMiddleware, userController.delete)
+    this.router.get('/', authMiddleware, userController.findAll)
+    this.router.get('/:userId', authMiddleware, userController.findById)
+    this.router.post('/', userController.store)
+    this.router.put('/', authMiddleware, userController.update)
+    this.router.delete('/', authMiddleware, userController.delete)
+  }
+}
 
-export default router
+export default new UserRouter()

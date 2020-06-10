@@ -1,8 +1,12 @@
-import { Router } from 'express'
 import loginController from '../controllers/login'
+import { BaseRouter } from './base'
 
-const router = Router()
+class LoginRouter extends BaseRouter {
+  constructor () {
+    super('/login')
 
-router.get('/', loginController.authenticate)
+    this.router.get('/', loginController.authenticate)
+  }
+}
 
-export default router
+export default new LoginRouter()
