@@ -1,6 +1,5 @@
-import { Table, Column, DefaultScope, HasMany } from 'sequelize-typescript'
+import { Table, Column, DefaultScope } from 'sequelize-typescript'
 import BaseModel from './base'
-import Post from './post'
 import validator from 'validator'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -25,9 +24,6 @@ export default class User extends BaseModel<User> {
 
   @Column
   password!: string
-
-  @HasMany(() => Post)
-  posts!: Post[]
 
   public async validateEmail (email: string): Promise<boolean> {
     if (!validator.isEmail(email)) this.addErrors('Invalid Email')

@@ -1,5 +1,4 @@
 import User from '../infra/models/user'
-import Post from '../infra/models/post'
 
 interface UserData {
   username?: string
@@ -39,14 +38,12 @@ class UserRepository {
         if (options.returnPassword === false) {
           user = await User.findOne({
             where: { email },
-            attributes: { exclude: ['password'] },
-            include: [Post]
+            attributes: { exclude: ['password'] }
           }) as User
         }
       } else {
         user = await User.findOne({
-          where: { email },
-          include: [Post]
+          where: { email }
         }) as User
       }
 
@@ -63,14 +60,12 @@ class UserRepository {
         if (options.returnPassword === false) {
           user = await User.findOne({
             where: { username },
-            attributes: { exclude: ['password'] },
-            include: [Post]
+            attributes: { exclude: ['password'] }
           }) as User
         }
       } else {
         user = await User.findOne({
-          where: { username },
-          include: [Post]
+          where: { username }
         }) as User
       }
 
@@ -87,14 +82,12 @@ class UserRepository {
         if (options.returnPassword === false) {
           user = await User.findOne({
             where: { id: userId },
-            attributes: { exclude: ['password'] },
-            include: [Post]
+            attributes: { exclude: ['password'] }
           }) as User
         }
       } else {
         user = await User.findOne({
-          where: { id: userId },
-          include: [Post]
+          where: { id: userId }
         }) as User
       }
 
@@ -110,12 +103,11 @@ class UserRepository {
       if (options) {
         if (options.returnPassword === false) {
           users = await User.findAll({
-            attributes: { exclude: ['password'] },
-            include: [Post]
+            attributes: { exclude: ['password'] }
           }) as User[]
         }
       } else {
-        users = await User.findAll({ include: [Post] }) as User[]
+        users = await User.findAll() as User[]
       }
 
       return users

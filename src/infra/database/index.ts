@@ -1,15 +1,16 @@
 import { Sequelize } from 'sequelize-typescript'
 import user from '../models/user'
-import post from '../models/post'
+import { config } from 'dotenv'
+config()
 
 const sequelize = new Sequelize({
-  database: 'db_jwt_ts_node',
-  host: 'localhost',
+  database: process.env.DB,
+  host: process.env.DB_HOST,
   dialect: 'mysql',
-  username: 'root',
-  password: 'root',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
   storage: ':memory:',
-  models: [user, post],
+  models: [user],
   define: {
     underscored: true,
     timestamps: true,
