@@ -40,14 +40,7 @@ export default async (req: Request, res: Response, next: NextFunction): Promise<
     const user = await userRepository.findById(payload.id, { returnPassword: false }) || new User()
 
     if (user.isEmpty()) {
-      return res.status(400).json({ error: 'User not exists' })
-    }
-
-    const paramUserId = Number(req.params.userId)
-    if (paramUserId) {
-      if (paramUserId !== user.id) {
-        return res.status(400).json({ error: 'Not authorized' })
-      }
+      return res.status(400).json({ error: 'User not exists, redo your login' })
     }
 
     req.user = user

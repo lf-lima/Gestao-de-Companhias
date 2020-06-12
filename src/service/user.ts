@@ -47,8 +47,13 @@ class UserService {
     }
   }
 
-  public async update (user: User, { username, email, password, confirmPassword }: UserDataUpdate) {
+  public async update (user: User, userId: number, { username, email, password, confirmPassword }: UserDataUpdate) {
     try {
+      if (user.id !== userId) {
+        user.addErrors('Not authorized')
+        return user
+      }
+
       const data: UserDataUpdate = {}
 
       if (username) {
@@ -108,8 +113,13 @@ class UserService {
     }
   }
 
-  public async delete (user: User) {
+  public async delete (user: User, userId: number) {
     try {
+      if (user.id !== userId) {
+        user.addErrors('Not authorized')
+        return user
+      }
+
       await userRepository.delete(user.id)
       return user
     } catch (error) {
