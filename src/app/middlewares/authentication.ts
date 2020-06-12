@@ -43,6 +43,13 @@ export default async (req: Request, res: Response, next: NextFunction): Promise<
       return res.status(400).json({ error: 'User not exists' })
     }
 
+    const paramUserId = Number(req.params.userId)
+    if (paramUserId) {
+      if (paramUserId !== user.id) {
+        return res.status(400).json({ error: 'Not authorized' })
+      }
+    }
+
     req.user = user
 
     return next()

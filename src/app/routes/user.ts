@@ -9,8 +9,8 @@ class UserRouter extends BaseRouter {
     this.router.get('/', authMiddleware, userController.findAll)
     this.router.get('/:userId', authMiddleware, userController.findById)
     this.router.post('/', userController.store)
-    this.router.put('/', authMiddleware, userController.update)
-    this.router.delete('/', authMiddleware, userController.delete)
+    this.router.put('/:userId', authMiddleware, userController.update)
+    this.router.delete('/:userId', authMiddleware, userController.delete)
   }
 }
 

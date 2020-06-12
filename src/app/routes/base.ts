@@ -5,6 +5,5 @@ export class BaseRouter {
   public route: string
   constructor (route: string) {
     this.route = route
-    this.router.use(this.route)
   }
 }
