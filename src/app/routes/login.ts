@@ -1,5 +1,5 @@
 import loginController from '../controllers/login'
-import { BaseRouter } from './base'
+import BaseRouter from './base'
 
 class LoginRouter extends BaseRouter {
   constructor () {

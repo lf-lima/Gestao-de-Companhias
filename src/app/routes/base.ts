@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-export class BaseRouter {
+export default class BaseRouter {
   public router = Router()
   public route: string
 

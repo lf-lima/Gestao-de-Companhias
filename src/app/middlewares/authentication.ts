@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import authConfig from '../../config/auth'
 import jwt from 'jsonwebtoken'
-import userRepository from '../../repository/user'
-import User from '../../infra/models/user'
+import userRepository from '../../repository/employee'
+import User from '../../infra/models/employee'
 
 interface TokenPayload {
   id: number

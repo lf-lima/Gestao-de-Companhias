@@ -1,8 +1,8 @@
-import userRepository from '../repository/user'
-import User from '../infra/models/user'
+import employeeRepository from '../repository/employee'
+import Employee from '../infra/models/employee'
 
 interface LoginData {
-  userLogin: string
+  email: string
   password: string
 }
 
@@ -13,23 +13,21 @@ interface LoginResponse {
 }
 
 class LoginService {
-  public async authenticate ({ userLogin, password }: LoginData): Promise<LoginResponse> {
-    const user = await userRepository.findByUsername(userLogin) ||
-                 await userRepository.findByEmail(userLogin) ||
-                 new User()
+  public async authenticate ({ email, password }: LoginData): Promise<LoginResponse> {
+    const employee = await employeeRepository.findByEmail(email) ||
+                  new Employee()
 
-    if (user.isEmpty()) {
-      user.addErrors('User not exists')
-      return { auth: false, errors: user.getErrors() }
+    if (employee.isEmpty()) {
+      employee.addErrors('User not exists')
+      return { auth: false, errors: employee.getErrors() }
     }
 
-    await user.checkPassword(password, user.password)
+    await employee.checkPassword(password, employee.password)
 
-    if (user.hasError) return { auth: false, errors: user.getErrors() }
+    if (employee.hasError) return { auth: false, errors: employee.getErrors() }
 
-    const token = await user.genToken({
-      id: user.id,
-      username: user.username,
+    const token = await employee.genToken({
+      id: employee.id,
       email: user.email
     })
 

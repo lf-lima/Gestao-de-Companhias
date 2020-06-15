@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript'
-import user from '../models/user'
+import company from '../models/company'
 import { config } from 'dotenv'
 config()
 
@@ -10,7 +10,7 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   storage: ':memory:',
-  models: [user],
+  models: [company],
   define: {
     underscored: true,
     timestamps: true,
