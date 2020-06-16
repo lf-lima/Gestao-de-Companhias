@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import authConfig from '../../config/auth'
 import jwt from 'jsonwebtoken'
+import companyRepository from '../../repository/company'
+import Company from '../../infra/models/company'
 
 interface TokenPayload {
   id: number
@@ -34,13 +36,19 @@ class Authentication {
       }
 
       const payload = jwt.verify(token, authConfig.secret) as TokenPayload
-      const user = await userRepository.findById(payload.id) || new User()
+      const company = await companyRepository.findById(payload.id) || new Company()
 
-      if (user.isEmpty()) {
-        return res.status(400).json({ error: 'User not exists, redo your login' })
+      if (company.isEmpty()) {
+        return res.status(400).json({ error: 'Company not exists, redo your login' })
       }
 
-      req.user = user
+      if (req.params.companyId) {
+        if (company.id !== Number(req.params.companyId)) {
+          return res.status(401).json({ error: 'Not authorized' })
+        }
+      }
+
+      req.company = company
 
       return next()
     } catch (error) {

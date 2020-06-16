@@ -1,6 +1,8 @@
 import { Table, Column } from 'sequelize-typescript'
 import BaseModel from './base'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import authConfig from '../../config/auth'
 
 @Table
 export default class Company extends BaseModel<Company> {
@@ -89,11 +91,18 @@ export default class Company extends BaseModel<Company> {
     return hashedPassword
   }
 
-  public async comparePassword (password: string): Promise<boolean> {
-    if (password !== this.password) {
-      return false
+  public async checkPassword (password: string): Promise<boolean> {
+    const response = bcrypt.compare(password, this.password).then(result => result)
+
+    if (!response) {
+      this.addErrors('Password incorrect')
     }
 
-    return true
+    return response
+  }
+
+  public async genToken (payload: { id: number}): Promise<string> {
+    const token = jwt.sign(payload, authConfig.secret, { expiresIn: 604800 }) // uma semana
+    return token
   }
 }

@@ -2,9 +2,9 @@ import { Request, Response } from 'express'
 import loginService from '../../service/login'
 
 class LoginController {
-  public async authenticate (req: Request, res: Response) {
+  public async company (req: Request, res: Response) {
     try {
-      const responseService = await loginService.authenticate(req.body)
+      const responseService = await loginService.company(req.body)
 
       if (!responseService.auth) {
         return res.status(400).json(responseService.errors)

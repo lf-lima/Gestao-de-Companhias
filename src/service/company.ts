@@ -37,7 +37,6 @@ class CompanyService {
       if (company.hasError) return company
 
       const data = {
-        name,
         cnpj,
         fantasyName,
         fullName,
@@ -77,19 +76,27 @@ class CompanyService {
 
       if (cnpj) {
         if (await company.validateCnpj(cnpj)) {
-          data.cnpj = cnpj
+          if (await companyRepository.findByCnpj(cnpj) && company.cnpj !== cnpj) {
+            company.addErrors('CNPJ already exists in system')
+          } else {
+            data.cnpj = cnpj
+          }
+        }
+      }
+
+      if (fullName) {
+        if (await company.validateFullName(fullName)) {
+          if (await companyRepository.findByFullName(fullName) && company.fullName !== fullName) {
+            company.addErrors('Full name already exists in system')
+          } else {
+            data.fullName = fullName
+          }
         }
       }
 
       if (fantasyName) {
         if (await company.validateFantasyName(fantasyName)) {
           data.fantasyName = fantasyName
-        }
-      }
-
-      if (fullName) {
-        if (await company.validateFullName(fullName)) {
-          data.fullName = fullName
         }
       }
 

@@ -1,10 +1,6 @@
-import employeeRepository from '../repository/employee'
-import Employee from '../infra/models/employee'
-
-interface LoginData {
-  email: string
-  password: string
-}
+import companyRepository from '../repository/company'
+import Company from '../infra/models/company'
+import { ifError } from 'assert'
 
 interface LoginResponse {
   auth: boolean
@@ -13,22 +9,28 @@ interface LoginResponse {
 }
 
 class LoginService {
-  public async authenticate ({ email, password }: LoginData): Promise<LoginResponse> {
-    const employee = await employeeRepository.findByEmail(email) ||
-                  new Employee()
+  public async company ({ cnpj, password }: { cnpj: string, password: string}): Promise<LoginResponse> {
+    let company = new Company()
 
-    if (employee.isEmpty()) {
-      employee.addErrors('User not exists')
-      return { auth: false, errors: employee.getErrors() }
+    if (await company.validateCnpj(cnpj)) {
+      company = await companyRepository.findByCnpj(cnpj) || new Company()
     }
 
-    await employee.checkPassword(password, employee.password)
+    if (company.hasError) {
+      return { auth: false, errors: company.getErrors() }
+    }
 
-    if (employee.hasError) return { auth: false, errors: employee.getErrors() }
+    if (company.isEmpty()) {
+      company.addErrors('Company not exists')
+      return { auth: false, errors: company.getErrors() }
+    }
 
-    const token = await employee.genToken({
-      id: employee.id,
-      email: user.email
+    await company.checkPassword(password)
+
+    if (company.hasError) return { auth: false, errors: company.getErrors() }
+
+    const token = await company.genToken({
+      id: company.id
     })
 
     return { auth: true, token }
