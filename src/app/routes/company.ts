@@ -1,12 +1,11 @@
 import BaseRouter from './base'
+import companyController from '../controllers/company'
 
 class CompanyRouter extends BaseRouter {
   constructor () {
     super('/company')
 
-    this.router.get('/', async (req, res) => {
-      return res.json({ msg: 'OK' })
-    })
+    this.router.post('/', companyController.create)
   }
 }
 

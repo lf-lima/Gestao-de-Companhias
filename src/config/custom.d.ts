@@ -1,9 +1,9 @@
-// import User from '../infra/models/employee'
+import Company from '../infra/models/employee'
 
-// declare global {
-//   namespace Express {
-//       export interface Request {
-//           user: User;
-//       }
-//   }
-// }
+declare global {
+  namespace Express {
+      export interface Request {
+          company: Company;
+      }
+  }
+}
