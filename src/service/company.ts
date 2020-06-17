@@ -27,11 +27,11 @@ class CompanyService {
       if (company.hasError) return company
 
       if (await companyRepository.findByCnpj(cnpj)) {
-        company.addErrors('CNPJ already exists in system')
+        await company.addErrors('CNPJ already exists in system')
       }
 
       if (await companyRepository.findByFullName(fullName)) {
-        company.addErrors('Full name already exists in system')
+        await company.addErrors('Full name already exists in system')
       }
 
       if (company.hasError) return company
@@ -40,7 +40,7 @@ class CompanyService {
         cnpj,
         fantasyName,
         fullName,
-        password: await company.hashPassword(password)
+        password
       }
 
       const responseRepository = await companyRepository.create(data)
@@ -77,7 +77,7 @@ class CompanyService {
       if (cnpj) {
         if (await company.validateCnpj(cnpj)) {
           if (await companyRepository.findByCnpj(cnpj) && company.cnpj !== cnpj) {
-            company.addErrors('CNPJ already exists in system')
+            await company.addErrors('CNPJ already exists in system')
           } else {
             data.cnpj = cnpj
           }
@@ -87,7 +87,7 @@ class CompanyService {
       if (fullName) {
         if (await company.validateFullName(fullName)) {
           if (await companyRepository.findByFullName(fullName) && company.fullName !== fullName) {
-            company.addErrors('Full name already exists in system')
+            await company.addErrors('Full name already exists in system')
           } else {
             data.fullName = fullName
           }
@@ -102,7 +102,7 @@ class CompanyService {
 
       if (password) {
         if (await company.validatePassword(password, confirmPassword)) {
-          data.password = await company.hashPassword(password)
+          data.password = password
         }
       }
 
@@ -127,7 +127,7 @@ class CompanyService {
       const company = await companyRepository.findById(findCompanyId) || new Company()
 
       if (company.isEmpty()) {
-        company.addErrors('Company not exists')
+        await company.addErrors('Company not exists')
       }
 
       return company

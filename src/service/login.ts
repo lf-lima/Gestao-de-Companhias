@@ -1,6 +1,5 @@
 import companyRepository from '../repository/company'
 import Company from '../infra/models/company'
-import { ifError } from 'assert'
 
 interface LoginResponse {
   auth: boolean
@@ -17,17 +16,17 @@ class LoginService {
     }
 
     if (company.hasError) {
-      return { auth: false, errors: company.getErrors() }
+      return { auth: false, errors: await company.getErrors() }
     }
 
     if (company.isEmpty()) {
       company.addErrors('Company not exists')
-      return { auth: false, errors: company.getErrors() }
+      return { auth: false, errors: await company.getErrors() }
     }
 
     await company.checkPassword(password)
 
-    if (company.hasError) return { auth: false, errors: company.getErrors() }
+    if (company.hasError) return { auth: false, errors: await company.getErrors() }
 
     const token = await company.genToken({
       id: company.id

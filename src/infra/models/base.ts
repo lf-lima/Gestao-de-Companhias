@@ -11,11 +11,11 @@ export default class BaseModel<TModel> extends Model<TModel> {
   private errors: string[] = []
   public hasError = false
 
-  public getErrors (): string[] {
+  public async getErrors (): Promise<string[]> {
     return this.errors
   }
 
-  public addErrors (err: string | string[]): void {
+  public async addErrors (err: string | string[]): Promise<void> {
     if (Array.isArray(err)) {
       err.map((msg) => { this.errors.push(msg) })
     } else {

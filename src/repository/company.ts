@@ -1,5 +1,9 @@
 import Company from '../infra/models/company'
 
+interface FindCompanyOptions {
+  returnPassword?: boolean
+}
+
 class CompanyRepository {
   public async create (data: {
     cnpj: string,
@@ -42,9 +46,14 @@ class CompanyRepository {
     }
   }
 
-  public async findById (companyId: number) {
+  public async findById (companyId: number, options?: FindCompanyOptions): Promise<Company> {
     try {
-      const company = await Company.findByPk(companyId) as Company
+      let company = await Company.findByPk(companyId) as Company
+      if (options) {
+        if (options.returnPassword === false) {
+          company = await Company.findByPk(companyId, { attributes: { exclude: ['password'] } }) as Company
+        }
+      }
       return company
     } catch (error) {
       throw new Error(error)
