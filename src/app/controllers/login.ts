@@ -1,16 +1,32 @@
 import { Request, Response } from 'express'
-import loginService from '../../service/login'
 
 class LoginController {
-  public async company (req: Request, res: Response) {
+  public async authetication (req: Request, res: Response) {
     try {
-      const responseService = await loginService.company(req.body)
+      let company = new Company()
 
-      if (!responseService.auth) {
-        return res.status(400).json(responseService.errors)
+      if (await company.validateCnpj(cnpj)) {
+        company = await companyRepository.findByCnpj(cnpj) || new Company()
       }
 
-      return res.status(200).json({ token: responseService.token })
+      if (company.hasError) {
+        return { auth: false, errors: await company.getErrors() }
+      }
+
+      if (company.isEmpty()) {
+        company.addErrors('Company not exists')
+        return { auth: false, errors: await company.getErrors() }
+      }
+
+      await company.checkPassword(password)
+
+      if (company.hasError) return { auth: false, errors: await company.getErrors() }
+
+      const token = await company.genToken({
+        id: company.id
+      })
+
+      return { auth: true, token }
     } catch (error) {
       return res.status(500).json({ error: 'Server Internal Error ' })
     }

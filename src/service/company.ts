@@ -6,15 +6,11 @@ class CompanyService {
     {
       cnpj,
       fantasyName,
-      fullName,
-      password,
-      confirmPassword
+      fullName
     }: {
     cnpj: string
     fantasyName: string
     fullName: string
-    password: string
-    confirmPassword: string
   }) {
     try {
       const company = new Company()
@@ -22,7 +18,6 @@ class CompanyService {
       await company.validateFantasyName(fantasyName)
       await company.validateFullName(fullName)
       await company.validateCnpj(cnpj)
-      await company.validatePassword(password, confirmPassword)
 
       if (company.hasError) return company
 
@@ -39,8 +34,7 @@ class CompanyService {
       const data = {
         cnpj,
         fantasyName,
-        fullName,
-        password
+        fullName
       }
 
       const responseRepository = await companyRepository.create(data)
@@ -55,23 +49,17 @@ class CompanyService {
     {
       cnpj,
       fantasyName,
-      fullName,
-      password,
-      confirmPassword
+      fullName
     }: {
     cnpj: string
     fantasyName: string
     fullName: string
-    password: string
-    confirmPassword: string
   }) {
     try {
       const data: {
         cnpj?: string
         fantasyName?: string
         fullName?: string
-        password?: string
-        confirmPassword?: string
       } = {}
 
       if (cnpj) {
@@ -97,12 +85,6 @@ class CompanyService {
       if (fantasyName) {
         if (await company.validateFantasyName(fantasyName)) {
           data.fantasyName = fantasyName
-        }
-      }
-
-      if (password) {
-        if (await company.validatePassword(password, confirmPassword)) {
-          data.password = password
         }
       }
 

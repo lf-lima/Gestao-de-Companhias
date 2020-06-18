@@ -1,11 +1,8 @@
-import Company from '../infra/models/company'
-import Employee from '../infra/models/employee'
-
+import User from '../infra/models/user'
 declare global {
   namespace Express {
       export interface Request {
-          company: Company,
-          employee: Employee
+        user: User
       }
   }
 }

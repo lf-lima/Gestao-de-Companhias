@@ -6,10 +6,9 @@ interface FindCompanyOptions {
 
 class CompanyRepository {
   public async create (data: {
-    cnpj: string,
-    fantasyName: string,
-    fullName: string,
-    password: string,
+    cnpj: string
+    fantasyName: string
+    fullName: string
   }) {
     try {
       const companyCreated = await Company.create(data)
@@ -22,10 +21,9 @@ class CompanyRepository {
   }
 
   public async update (companyId: number, data: {
-    cnpj?: string,
-    fantasyName?: string,
-    fullName?: string,
-    password?: string,
+    cnpj?: string
+    fantasyName?: string
+    fullName?: string
   }) {
     try {
       await Company.update(data, { where: { id: companyId } })
@@ -46,14 +44,9 @@ class CompanyRepository {
     }
   }
 
-  public async findById (companyId: number, options?: FindCompanyOptions): Promise<Company> {
+  public async findById (companyId: number): Promise<Company> {
     try {
-      let company = await Company.findByPk(companyId) as Company
-      if (options) {
-        if (options.returnPassword === false) {
-          company = await Company.findByPk(companyId, { attributes: { exclude: ['password'] } }) as Company
-        }
-      }
+      const company = await Company.findByPk(companyId) as Company
       return company
     } catch (error) {
       throw new Error(error)
