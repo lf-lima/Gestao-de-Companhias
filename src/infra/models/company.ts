@@ -13,6 +13,13 @@ export default class Company extends BaseModel<Company> {
   @Column
   fullName!: string
 
+  @ForeignKey(() => User)
+  @Column
+  userId!: number
+
+  @BelongsTo(() => User)
+  user?: User
+
   @BeforeUpdate
   @BeforeCreate
   static async splitCnpj (instance: Company): Promise<void> {

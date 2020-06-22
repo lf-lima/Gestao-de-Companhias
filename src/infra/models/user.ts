@@ -1,16 +1,21 @@
-import { Column, BeforeCreate, BeforeUpdate } from 'sequelize-typescript'
+import { Column, BeforeCreate, BeforeUpdate, HasOne, Table } from 'sequelize-typescript'
 import BaseModel from './base'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import validator from 'validator'
 import authConfig from '../../config/auth'
+import validator from 'validator'
+import Company from './company'
 
+@Table
 export default class User extends BaseModel<User> {
   @Column
   email!: string
 
   @Column
   password!: string
+
+  @HasOne(() => Company)
+  company?: Company
 
   @BeforeCreate
   @BeforeUpdate
