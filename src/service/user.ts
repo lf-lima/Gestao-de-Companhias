@@ -4,25 +4,25 @@ import userRepository from '../repository/user'
 class UserService {
   public async create (
     {
-      username, password, confirmPassword
+      email, password, confirmPassword
     }: {
-      username: string, password: string, confirmPassword: string
+      email: string, password: string, confirmPassword: string
     }
   ) {
     try {
       const user = new User()
 
-      await user.validateUsername(username)
+      await user.validateEmail(email)
       await user.validatePassword(password, confirmPassword)
 
-      if (await userRepository.findByUsername(username)) {
+      if (await userRepository.findByEmail(email)) {
         await user.addErrors('User already exists')
       }
 
       if (user.hasError) return user
 
       const data = {
-        username,
+        email,
         password
       }
 
@@ -36,9 +36,9 @@ class UserService {
   public async update (
     userId: number,
     {
-      username, password, confirmPassword
+      email, password, confirmPassword
     }: {
-      username?: string, password?: string, confirmPassword?: string
+      email?: string, password?: string, confirmPassword?: string
     }
   ) {
     try {
@@ -50,15 +50,15 @@ class UserService {
       }
 
       const data: {
-        username?: string, password?: string
+        email?: string, password?: string
       } = {}
 
-      if (username) {
-        if (await user.validateUsername(username)) {
-          if (await userRepository.findByUsername(username)) {
+      if (email) {
+        if (await user.validateEmail(email)) {
+          if (await userRepository.findByEmail(email)) {
             await user.addErrors('User already exists')
           } else {
-            data.username = username
+            data.email = email
           }
         }
       }

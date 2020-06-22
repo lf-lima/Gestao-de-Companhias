@@ -2,11 +2,12 @@ import { Column, BeforeCreate, BeforeUpdate } from 'sequelize-typescript'
 import BaseModel from './base'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import validator from 'validator'
 import authConfig from '../../config/auth'
 
 export default class User extends BaseModel<User> {
   @Column
-  username!: string
+  email!: string
 
   @Column
   password!: string
@@ -17,16 +18,12 @@ export default class User extends BaseModel<User> {
     instance.password = await bcrypt.hash(instance.password, 10).then(hash => hash)
   }
 
-  public async validateUsername (username: string): Promise<boolean> {
-    if (!username) {
-      await this.addErrors('Username is required')
+  public async validateEmail (email: string): Promise<boolean> {
+    if (!email) {
+      await this.addErrors('Email is required')
     } else {
-      if (username.length <= 1) {
-        await this.addErrors('Username is to short')
-      }
-
-      if (username.length > 16) {
-        await this.addErrors('Username is to long')
+      if (!validator.isEmail(email)) {
+        await this.addErrors('Email is invalid')
       }
     }
 

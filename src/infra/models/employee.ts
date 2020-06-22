@@ -1,7 +1,6 @@
 import { Table, Column, BeforeCreate, BeforeUpdate } from 'sequelize-typescript'
 import BaseModel from './base'
 import moment from 'moment'
-import validator from 'validator'
 
 @Table
 export default class Employee extends BaseModel<Employee> {
@@ -16,9 +15,6 @@ export default class Employee extends BaseModel<Employee> {
 
   @Column
   birthday!: Date
-
-  @Column
-  email!: string
 
   @Column
   cpf!: string
@@ -75,20 +71,6 @@ export default class Employee extends BaseModel<Employee> {
 
       if (birthday > dateNow || birthday === dateNow) {
         await this.addErrors('Birthday is invalid')
-      }
-    }
-
-    if (this.hasError) return false
-
-    return true
-  }
-
-  public async validateEmail (email: string): Promise<boolean> {
-    if (!email) {
-      await this.addErrors('Email is required')
-    } else {
-      if (!validator.isEmail(email)) {
-        this.addErrors('Email is invalid')
       }
     }
 

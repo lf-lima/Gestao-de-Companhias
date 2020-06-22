@@ -1,5 +1,6 @@
-import { Table, Column, BeforeUpdate, BeforeCreate } from 'sequelize-typescript'
+import { Table, Column, BeforeUpdate, BeforeCreate, ForeignKey, BelongsTo } from 'sequelize-typescript'
 import BaseModel from './base'
+import User from './user'
 
 @Table
 export default class Company extends BaseModel<Company> {

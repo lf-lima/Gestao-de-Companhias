@@ -1,14 +1,11 @@
 import Company from '../infra/models/company'
 
-interface FindCompanyOptions {
-  returnPassword?: boolean
-}
-
 class CompanyRepository {
   public async create (data: {
     cnpj: string
     fantasyName: string
     fullName: string
+    userId: number
   }) {
     try {
       const companyCreated = await Company.create(data)

@@ -1,10 +1,17 @@
 import { Response, Request } from 'express'
 import companyService from '../../service/company'
+import userService from '../../service/user'
 
 class CompanyController {
   public async create (req: Request, res: Response) {
     try {
-      const responseService = await companyService.create(req.body)
+      const user = await userService.create(req.body.user)
+
+      if (user.hasError) {
+        return res.status(400).json(await user.getErrors())
+      }
+
+      const responseService = await companyService.create(user.id, req.body.company)
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())
@@ -18,7 +25,7 @@ class CompanyController {
 
   public async update (req: Request, res: Response) {
     try {
-      const responseService = await companyService.update(req.company, req.body)
+      const responseService = await companyService.update(Number(req.params.companyId), req.body)
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())

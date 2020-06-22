@@ -3,6 +3,7 @@ import Company from '../infra/models/company'
 
 class CompanyService {
   public async create (
+    userId: number,
     {
       cnpj,
       fantasyName,
@@ -13,6 +14,10 @@ class CompanyService {
     fullName: string
   }) {
     try {
+      console.log(cnpj,
+        fantasyName,
+        fullName)
+
       const company = new Company()
 
       await company.validateFantasyName(fantasyName)
@@ -34,7 +39,8 @@ class CompanyService {
       const data = {
         cnpj,
         fantasyName,
-        fullName
+        fullName,
+        userId
       }
 
       const responseRepository = await companyRepository.create(data)
@@ -45,7 +51,7 @@ class CompanyService {
   }
 
   public async update (
-    company: Company,
+    companyId: number,
     {
       cnpj,
       fantasyName,
@@ -56,6 +62,13 @@ class CompanyService {
     fullName: string
   }) {
     try {
+      const company = await companyRepository.findById(companyId) || new Company()
+
+      if (company.isEmpty()) {
+        await company.addErrors('Company not exists')
+        return company
+      }
+
       const data: {
         cnpj?: string
         fantasyName?: string

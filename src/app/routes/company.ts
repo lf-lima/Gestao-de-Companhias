@@ -6,11 +6,11 @@ class CompanyRouter extends BaseRouter {
   constructor () {
     super('/company')
 
-    this.router.get('/', authMiddleware.company, companyController.findAll)
+    this.router.get('/', companyController.findAll)
     this.router.get('/:findCompanyId', companyController.findById)
     this.router.post('/', companyController.create)
-    this.router.put('/:companyId', authMiddleware.company, companyController.update)
-    this.router.delete('/:companyId', authMiddleware.company, companyController.delete)
+    this.router.put('/:companyId', companyController.update)
+    this.router.delete('/:companyId', companyController.delete)
   }
 }
 
