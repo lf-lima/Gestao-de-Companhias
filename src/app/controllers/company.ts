@@ -1,21 +1,21 @@
 import { Response, Request } from 'express'
 import companyService from '../../service/company'
 import userService from '../../service/user'
+import { InputCompanyCreate } from '../messages/company/input'
 
 class CompanyController {
   public async create (req: Request, res: Response) {
     try {
+      const inputCompanyCreate = new InputCompanyCreate(req.body.user, req.body.company)
+      const errors = await inputCompanyCreate.validate()
+
+      if (inputCompanyCreate.hasError) {
+        return res.status(400).json(errors)
+      }
+
       const user = await userService.create(req.body.user)
 
-      if (user.hasError) {
-        return res.status(400).json(await user.getErrors())
-      }
-
       const responseService = await companyService.create(user.id, req.body.company)
-
-      if (responseService.hasError) {
-        return res.status(400).json(await responseService.getErrors())
-      }
 
       return res.status(200).json(responseService)
     } catch (error) {

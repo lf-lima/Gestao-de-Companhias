@@ -12,7 +12,8 @@ class CompanyService {
     cnpj: string
     fantasyName: string
     fullName: string
-  }) {
+  }
+  ) {
     try {
       const company = new Company()
 

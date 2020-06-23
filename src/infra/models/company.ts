@@ -13,8 +13,8 @@ export default class Company extends BaseModel<Company> {
   @Column
   fullName!: string
 
-  @ForeignKey(() => User)
   @Column
+  @ForeignKey(() => User)
   userId!: number
 
   @BelongsTo(() => User)
@@ -24,6 +24,16 @@ export default class Company extends BaseModel<Company> {
   @BeforeCreate
   static async splitCnpj (instance: Company): Promise<void> {
     instance.cnpj = instance.cnpj.replace(/[^\d]+/g, '')
+  }
+
+  public async setAll ({
+    cnpj, fantasyName, fullName
+  }: {
+    cnpj: string, fantasyName: string, fullName: string
+  }): Promise<void> {
+    this.cnpj = cnpj
+    this.fantasyName = fantasyName
+    this.fullName = fullName
   }
 
   public async validateCnpj (cnpj: string): Promise<boolean> {
