@@ -14,10 +14,6 @@ class CompanyService {
     fullName: string
   }) {
     try {
-      console.log(cnpj,
-        fantasyName,
-        fullName)
-
       const company = new Company()
 
       await company.validateFantasyName(fantasyName)

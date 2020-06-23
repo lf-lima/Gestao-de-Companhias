@@ -1,6 +1,5 @@
 import BaseRouter from './base'
 import companyController from '../controllers/company'
-import authMiddleware from '../middlewares/authentication'
 
 class CompanyRouter extends BaseRouter {
   constructor () {
