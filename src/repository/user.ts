@@ -34,9 +34,14 @@ class UserRepository {
     }
   }
 
-  public async findByEmail (email: string) {
+  public async findByEmail (email: string, options?: { returnPassword?: boolean}) {
     try {
-      const user = await User.findOne({ where: { email } }) as User
+      let user = await User.findOne({ where: { email } }) as User
+      if (options) {
+        if (options.returnPassword) {
+          user = await User.findOne({ where: { email }, attributes: { exclude: ['password'] } }) as User
+        }
+      }
       return user
     } catch (error) {
       throw new Error(error)

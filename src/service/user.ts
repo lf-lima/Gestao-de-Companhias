@@ -3,29 +3,9 @@ import userRepository from '../repository/user'
 
 class UserService {
   public async create (
-    {
-      email, password, confirmPassword
-    }: {
-      email: string, password: string, confirmPassword: string
-    }
+    data : { email: string, password: string, confirmPassword: string }
   ) {
     try {
-      const user = new User()
-
-      await user.validateEmail(email)
-      await user.validatePassword(password, confirmPassword)
-
-      if (await userRepository.findByEmail(email)) {
-        await user.addErrors('User already exists')
-      }
-
-      if (user.hasError) return user
-
-      const data = {
-        email,
-        password
-      }
-
       const responseRepository = await userRepository.create(data)
       return responseRepository
     } catch (error) {
@@ -81,6 +61,20 @@ class UserService {
   public async findById (userId: number) {
     try {
       const user = await userRepository.findById(userId, { returnPassword: false }) || new User()
+
+      if (user.isEmpty()) {
+        await user.addErrors('User not exists')
+      }
+
+      return user
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  public async findByEmail (email: string) {
+    try {
+      const user = await userRepository.findByEmail(email, { returnPassword: false }) || new User()
 
       if (user.isEmpty()) {
         await user.addErrors('User not exists')

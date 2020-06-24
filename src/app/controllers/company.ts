@@ -1,23 +1,25 @@
 import { Response, Request } from 'express'
 import companyService from '../../service/company'
 import userService from '../../service/user'
-import { InputCompanyCreate } from '../messages/company/input'
+import { InputCompanyUserCreate, User, Company } from '../messages/company/input'
 
 class CompanyController {
   public async create (req: Request, res: Response) {
     try {
-      const inputCompanyCreate = new InputCompanyCreate(req.body.user, req.body.company)
-      const errors = await inputCompanyCreate.validate()
+      const inputCompanyUserCreate =
+        new InputCompanyUserCreate({ user: new User(req.body.user), company: new Company(req.body.company) })
 
-      if (inputCompanyCreate.hasError) {
+      const errors = await inputCompanyUserCreate.validate()
+
+      if (inputCompanyUserCreate.hasError) {
         return res.status(400).json(errors)
       }
 
       const user = await userService.create(req.body.user)
 
-      const responseService = await companyService.create(user.id, req.body.company)
+      const company = await companyService.create({ ...req.body.company, userId: user.id })
 
-      return res.status(200).json(responseService)
+      return res.status(200).json(company)
     } catch (error) {
       return res.status(500).json({ error: 'Server Internal Errror' })
     }
