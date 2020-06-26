@@ -14,11 +14,10 @@ class UserService {
   }
 
   public async update (
-    userId: number,
     {
-      email, password, confirmPassword
+      userId, email, password, confirmPassword
     }: {
-      email?: string, password?: string, confirmPassword?: string
+      userId: number, email?: string, password?: string, confirmPassword?: string
     }
   ) {
     try {
@@ -54,10 +53,15 @@ class UserService {
     }
   }
 
-  public async findById (userId: number) {
+  public async findById (userId: number, options: { returnPassword: boolean }) {
     try {
-      const user = await userRepository.findById(userId, { returnPassword: false }) || new User()
+      let user = await userRepository.findById(userId, { returnPassword: false }) || new User()
 
+      if (options) {
+        if (options.returnPassword === false) {
+          user = await userRepository.findByEmail(email, { returnPassword: false })
+        }
+      }
       if (user.isEmpty()) {
         await user.addErrors('User not exists')
       }
@@ -95,7 +99,7 @@ class UserService {
 
   public async delete (userId: number) {
     try {
-      const user = await userRepository.findById(userId, { returnPassword: false }) || new User()
+      const user = await this.findById(userId, { returnPassword: false }) || new User()
 
       if (user.isEmpty()) {
         await user.addErrors('User not exists')

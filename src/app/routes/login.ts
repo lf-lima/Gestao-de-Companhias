@@ -5,7 +5,7 @@ class LoginRouter extends BaseRouter {
   constructor () {
     super('/login')
 
-    this.router.get('/', loginController.authetication)
+    // this.router.get('/', loginController.authetication)
   }
 }
 

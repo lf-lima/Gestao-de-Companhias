@@ -1,7 +1,7 @@
 import { Response, Request } from 'express'
 import companyService from '../../service/company'
 import { InputCompanyUserCreate, UserCreate, CompanyCreate } from '../messages/company/inputCompanyUserCreate'
-import { InputCompanyUpdate, CompanyUpdate } from '../messages/company/inputCompanyUpdate'
+import { InputCompanyUpdate } from '../messages/company/inputCompanyUpdate'
 
 class CompanyController {
   public async createCompanyUser (req: Request, res: Response) {
@@ -31,7 +31,7 @@ class CompanyController {
   public async update (req: Request, res: Response) {
     try {
       const inputCompanyUpdate =
-        new InputCompanyUpdate({ company: new CompanyUpdate({ ...req.body, companyId: Number(req.params.companyId) }) })
+        new InputCompanyUpdate({ ...req.body, companyId: Number(req.params.companyId) })
 
       const errors = await inputCompanyUpdate.validate()
 
