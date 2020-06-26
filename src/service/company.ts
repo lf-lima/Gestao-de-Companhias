@@ -103,9 +103,7 @@ class CompanyService {
       }
 
       if (fantasyName) {
-        if (await company.validateFantasyName(fantasyName)) {
-          data.fantasyName = fantasyName
-        }
+        data.fantasyName = fantasyName
       }
 
       const responseRepository = await companyRepository.update(company.id, data)

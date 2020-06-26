@@ -23,41 +23,6 @@ export default class User extends BaseModel<User> {
     instance.password = await bcrypt.hash(instance.password, 10).then(hash => hash)
   }
 
-  public async validateEmail (email: string): Promise<boolean> {
-    if (!email) {
-      await this.addErrors('Email is required')
-    } else {
-      if (!validator.isEmail(email)) {
-        await this.addErrors('Email is invalid')
-      }
-    }
-
-    if (this.hasError) return false
-    return true
-  }
-
-  public async validatePassword (password: string, confirmPassword: string): Promise<boolean> {
-    if (!password || !confirmPassword) {
-      await this.addErrors('Password and Confirm Password is required')
-    } else {
-      if (password.length <= 1) {
-        await this.addErrors('Password is too short ')
-      }
-
-      if (password.length > 16) {
-        await this.addErrors('Password is too long')
-      }
-
-      if (password !== confirmPassword) {
-        await this.addErrors('Password and Confirm Password are diffenrent ')
-      }
-    }
-
-    if (this.hasError) return false
-
-    return true
-  }
-
   public async checkPassword (password: string): Promise<boolean> {
     const response = bcrypt.compare(password, this.password).then(result => result)
 
