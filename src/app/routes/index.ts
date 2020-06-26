@@ -1,8 +1,9 @@
 import { Router } from 'express'
 import company from './company'
 import login from './login'
+import user from './user'
 
-const routers = [company, login]
+const routers = [company, login, user]
 
 class MainRouter {
   public router = Router()
