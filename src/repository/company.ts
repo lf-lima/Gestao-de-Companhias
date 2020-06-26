@@ -5,7 +5,7 @@ class CompanyRepository {
     cnpj: string,
     fantasyName: string,
     fullName: string,
-    userId: number,
+    userId: number
   }) {
     try {
       const companyCreated = await Company.create(data)

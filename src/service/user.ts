@@ -72,12 +72,14 @@ class UserService {
     }
   }
 
-  public async findByEmail (email: string) {
+  public async findByEmail (email: string, options?:{ returnPassword: boolean }) {
     try {
-      const user = await userRepository.findByEmail(email, { returnPassword: false }) || new User()
+      let user = await userRepository.findByEmail(email)
 
-      if (user.isEmpty()) {
-        await user.addErrors('User not exists')
+      if (options) {
+        if (options.returnPassword === false) {
+          user = await userRepository.findByEmail(email, { returnPassword: false })
+        }
       }
 
       return user

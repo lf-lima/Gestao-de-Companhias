@@ -26,16 +26,6 @@ export default class Company extends BaseModel<Company> {
     instance.cnpj = instance.cnpj.replace(/[^\d]+/g, '')
   }
 
-  public async setAll ({
-    cnpj, fantasyName, fullName
-  }: {
-    cnpj: string, fantasyName: string, fullName: string
-  }): Promise<void> {
-    this.cnpj = cnpj
-    this.fantasyName = fantasyName
-    this.fullName = fullName
-  }
-
   public async validateCnpj (cnpj: string): Promise<boolean> {
     let response = true
     if (!cnpj) {

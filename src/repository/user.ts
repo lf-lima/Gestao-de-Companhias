@@ -4,7 +4,7 @@ class UserRepository {
   public async create (data: { email: string, password: string}) {
     try {
       const userCreated = await User.create(data) as User
-      const user = await this.findById(userCreated.id)
+      const user = await this.findById(userCreated.id, { returnPassword: false })
       return user
     } catch (error) {
       throw new Error(error)
@@ -24,7 +24,7 @@ class UserRepository {
     try {
       let user = await User.findByPk(userId) as User
       if (options) {
-        if (options.returnPassword) {
+        if (options.returnPassword === false) {
           user = await User.findByPk(userId, { attributes: { exclude: ['password'] } }) as User
         }
       }
@@ -34,11 +34,11 @@ class UserRepository {
     }
   }
 
-  public async findByEmail (email: string, options?: { returnPassword?: boolean}) {
+  public async findByEmail (email: string, options?: { returnPassword?: boolean }) {
     try {
       let user = await User.findOne({ where: { email } }) as User
       if (options) {
-        if (options.returnPassword) {
+        if (options.returnPassword === false) {
           user = await User.findOne({ where: { email }, attributes: { exclude: ['password'] } }) as User
         }
       }

@@ -7,7 +7,7 @@ class CompanyRouter extends BaseRouter {
 
     this.router.get('/', companyController.findAll)
     this.router.get('/:findCompanyId', companyController.findById)
-    this.router.post('/', companyController.create)
+    this.router.post('/user', companyController.createCompanyUser)
     this.router.put('/:companyId', companyController.update)
     this.router.delete('/:companyId', companyController.delete)
   }

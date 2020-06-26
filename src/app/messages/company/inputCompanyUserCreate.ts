@@ -1,11 +1,10 @@
-import { IsNotEmpty, IsString, Length, IsInt, Min, IsEmail, ValidateNested, ValidationError, validate } from 'class-validator'
-import { IsCompanyCnpjAlreadyExist, IsCompanyFullNameAlreadyExist, IsCnpj } from '../../../config/decorators/company'
-import { IsUserExist, IsUserEmailAlreadyExist } from '../../../config/decorators/user'
-import { Match } from '../../../config/decorators/others'
+import { IsNotEmpty, IsString, Length, IsEmail, ValidateNested } from 'class-validator'
+import { IsCnpj, Match } from '../../../config/decorators/others'
+
 import InputBase from '../base/input'
 
-export class Company {
-  constructor (obj: Partial<Company>) {
+export class CompanyCreate {
+  constructor (obj: Partial<CompanyCreate>) {
     Object.assign(this, obj)
   }
 
@@ -13,7 +12,6 @@ export class Company {
   @IsString()
   @Length(18, 18)
   @IsCnpj()
-  @IsCompanyCnpjAlreadyExist()
   cnpj!: string
 
   @IsNotEmpty()
@@ -24,16 +22,14 @@ export class Company {
   @IsNotEmpty()
   @IsString()
   @Length(1, 255)
-  @IsCompanyFullNameAlreadyExist()
   fullName!: string
 }
 
-export class User {
-  constructor (obj: Partial<User>) {
+export class UserCreate {
+  constructor (obj: Partial<UserCreate>) {
     Object.assign(this, obj)
   }
 
-  @IsUserEmailAlreadyExist()
   @IsNotEmpty()
   @IsEmail()
   email!: string
@@ -57,9 +53,11 @@ export class InputCompanyUserCreate extends InputBase {
     Object.assign(this, obj)
   }
 
+  @IsNotEmpty()
   @ValidateNested()
-  company!: Company
+  company!: CompanyCreate
 
+  @IsNotEmpty()
   @ValidateNested()
-  user!: User
+  user!: UserCreate
 }

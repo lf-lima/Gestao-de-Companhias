@@ -1,13 +1,14 @@
-import { Response, Request } from 'express'
+import e, { Response, Request } from 'express'
 import companyService from '../../service/company'
 import userService from '../../service/user'
-import { InputCompanyUserCreate, User, Company } from '../messages/company/input'
+import { InputCompanyUserCreate, UserCreate, CompanyCreate } from '../messages/company/inputCompanyUserCreate'
+import { InputCompanyUpdate, CompanyUpdate } from '../messages/company/inputCompanyUpdate'
 
 class CompanyController {
-  public async create (req: Request, res: Response) {
+  public async createCompanyUser (req: Request, res: Response) {
     try {
       const inputCompanyUserCreate =
-        new InputCompanyUserCreate({ user: new User(req.body.user), company: new Company(req.body.company) })
+      new InputCompanyUserCreate({ user: new UserCreate(req.body.user), company: new CompanyCreate(req.body.company) })
 
       const errors = await inputCompanyUserCreate.validate()
 
@@ -15,19 +16,31 @@ class CompanyController {
         return res.status(400).json(errors)
       }
 
-      const user = await userService.create(req.body.user)
+      const responseService = await companyService.createCompanyUser(req.body.user, req.body.company)
+      const { user, company } = responseService
 
-      const company = await companyService.create({ ...req.body.company, userId: user.id })
+      if (user.hasError || company.hasError) {
+        return res.status(400).json({ userErrors: await user.getErrors(), companyErrors: await company.getErrors() })
+      }
 
-      return res.status(200).json(company)
+      return res.status(200).json(responseService)
     } catch (error) {
-      return res.status(500).json({ error: 'Server Internal Errror' })
+      return res.status(500).json({ error: 'Server internal error' })
     }
   }
 
   public async update (req: Request, res: Response) {
     try {
-      const responseService = await companyService.update(Number(req.params.companyId), req.body)
+      const inputCompanyUpdate =
+        new InputCompanyUpdate({ company: new CompanyUpdate({ ...req.body, companyId: Number(req.params.companyId) }) })
+
+      const errors = await inputCompanyUpdate.validate()
+
+      if (inputCompanyUpdate.hasError) {
+        return res.status(400).json(errors)
+      }
+
+      const responseService = await companyService.update({ ...req.body, companyId: Number(req.params.companyId) })
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())

@@ -1,13 +1,55 @@
 import companyRepository from '../repository/company'
+import userService from '../service/user'
 import Company from '../infra/models/company'
+import User from '../infra/models/user'
 
 class CompanyService {
+  public async createCompanyUser (
+    userData: {
+      email: string,
+      password: string,
+      confirmPassword: string
+    },
+    companyData: {
+      cnpj: string,
+      fantasyName: string,
+      fullName: string
+    }) {
+    try {
+      let user = new User()
+
+      if (await userService.findByEmail(userData.email)) {
+        await user.addErrors('Email already exists')
+      }
+
+      let company = new Company()
+      if (await this.findByCnpj(companyData.cnpj)) {
+        await company.addErrors('Cnpj already exists')
+      }
+
+      if (await this.findByFullName(companyData.fullName)) {
+        await company.addErrors('Full company name already exists')
+      }
+
+      if (company.hasError || user.hasError) {
+        return { user, company }
+      }
+
+      user = await userService.create(userData)
+      company = await this.create({ ...companyData, userId: user.id })
+
+      return { user, company }
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   public async create (
     data: {
     cnpj: string,
     fantasyName: string,
     fullName: string,
-    userId: number,
+    userId: number
   }
   ) {
     try {
@@ -19,12 +61,13 @@ class CompanyService {
   }
 
   public async update (
-    companyId: number,
     {
+      companyId,
       cnpj,
       fantasyName,
       fullName
     }: {
+    companyId: number,
     cnpj: string
     fantasyName: string
     fullName: string
@@ -44,22 +87,18 @@ class CompanyService {
       } = {}
 
       if (cnpj) {
-        if (await company.validateCnpj(cnpj)) {
-          if (await companyRepository.findByCnpj(cnpj) && company.cnpj !== cnpj) {
-            await company.addErrors('CNPJ already exists in system')
-          } else {
-            data.cnpj = cnpj
-          }
+        if (await companyRepository.findByCnpj(cnpj) && company.cnpj !== cnpj) {
+          await company.addErrors('CNPJ already exists in')
+        } else {
+          data.cnpj = cnpj
         }
       }
 
       if (fullName) {
-        if (await company.validateFullName(fullName)) {
-          if (await companyRepository.findByFullName(fullName) && company.fullName !== fullName) {
-            await company.addErrors('Full name already exists in system')
-          } else {
-            data.fullName = fullName
-          }
+        if (await companyRepository.findByFullName(fullName) && company.fullName !== fullName) {
+          await company.addErrors('Full company name already exists')
+        } else {
+          data.fullName = fullName
         }
       }
 
@@ -101,11 +140,8 @@ class CompanyService {
 
   public async findByCnpj (cnpj: string) {
     try {
-      const company = await companyRepository.findByCnpj(cnpj) || new Company()
-
-      if (company.isEmpty()) {
-        await company.addErrors('Company not exists')
-      }
+      cnpj = cnpj.replace(/[^\d]+/g, '')
+      const company = await companyRepository.findByCnpj(cnpj)
 
       return company
     } catch (error) {
@@ -115,11 +151,7 @@ class CompanyService {
 
   public async findByFullName (fullName: string) {
     try {
-      const company = await companyRepository.findByFullName(fullName) || new Company()
-
-      if (company.isEmpty()) {
-        await company.addErrors('Company not exists')
-      }
+      const company = await companyRepository.findByFullName(fullName)
 
       return company
     } catch (error) {
