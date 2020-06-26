@@ -1,6 +1,5 @@
-import e, { Response, Request } from 'express'
+import { Response, Request } from 'express'
 import companyService from '../../service/company'
-import userService from '../../service/user'
 import { InputCompanyUserCreate, UserCreate, CompanyCreate } from '../messages/company/inputCompanyUserCreate'
 import { InputCompanyUpdate, CompanyUpdate } from '../messages/company/inputCompanyUpdate'
 

@@ -34,19 +34,15 @@ class UserService {
       } = {}
 
       if (email) {
-        if (await user.validateEmail(email)) {
-          if (await userRepository.findByEmail(email)) {
-            await user.addErrors('User already exists')
-          } else {
-            data.email = email
-          }
+        if (await userRepository.findByEmail(email)) {
+          await user.addErrors('User already exists')
+        } else {
+          data.email = email
         }
       }
 
       if (password && confirmPassword) {
-        if (await user.validatePassword(password, confirmPassword)) {
-          data.password = password
-        }
+        data.password = password
       }
 
       if (user.hasError) return user
