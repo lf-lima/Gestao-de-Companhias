@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express'
 import authConfig from '../../config/auth'
 import jwt from 'jsonwebtoken'
-import companyRepository from '../../repository/company'
-import Company from '../../infra/models/company'
+import User from '../../infra/models/user'
+import userService from '../../service/user'
 
 interface TokenPayload {
   id: number
 }
 
 class Authentication {
-  async company (req: Request, res: Response, next: NextFunction): Promise<void | Response> {
+  async auth (req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const authHeader = req.headers.authorization
 
@@ -36,19 +36,13 @@ class Authentication {
       }
 
       const payload = jwt.verify(token, authConfig.secret) as TokenPayload
-      const company = await companyRepository.findById(payload.id) || new Company()
+      const user = await userService.findById(payload.id) || new User()
 
-      if (company.isEmpty()) {
-        return res.status(400).json({ error: 'Company not exists, redo your login' })
+      if (user.isEmpty()) {
+        return res.status(400).json({ error: 'User not exists, redo your login' })
       }
 
-      if (req.params.companyId) {
-        if (company.id !== Number(req.params.companyId)) {
-          return res.status(401).json({ error: 'Not authorized' })
-        }
-      }
-
-      req.company = company
+      req.user = user
 
       return next()
     } catch (error) {

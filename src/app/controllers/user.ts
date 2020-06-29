@@ -57,7 +57,7 @@ class UserController {
         return res.status(400).json(await responseService.getErrors())
       }
 
-      return res.status(200).json(responseService)
+      return res.status(204).json({})
     } catch (error) {
       return res.status(500).json({ error: 'Server internal error' })
     }
