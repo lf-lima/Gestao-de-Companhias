@@ -74,6 +74,12 @@ class CompanyService {
   }) {
     try {
       const company = await companyRepository.findById(companyId) || new Company()
+      console.log({
+        companyId,
+        cnpj,
+        fantasyName,
+        fullName
+      })
 
       if (company.isEmpty()) {
         await company.addErrors('Company not exists')

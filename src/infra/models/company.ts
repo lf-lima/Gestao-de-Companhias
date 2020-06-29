@@ -1,4 +1,4 @@
-import { Table, Column, BeforeUpdate, BeforeCreate, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Table, Column, BeforeCreate, ForeignKey, BelongsTo, BeforeBulkUpdate } from 'sequelize-typescript'
 import BaseModel from './base'
 import User from './user'
 
@@ -20,9 +20,13 @@ export default class Company extends BaseModel<Company> {
   @BelongsTo(() => User)
   user?: User
 
-  @BeforeUpdate
   @BeforeCreate
-  static async splitCnpj (instance: Company): Promise<void> {
+  static async splitCnpjCreate (instance: Company): Promise<void> {
     instance.cnpj = instance.cnpj.replace(/[^\d]+/g, '')
+  }
+
+  @BeforeBulkUpdate
+  static async splitCnpjUpdate ({ attributes }: { attributes: { cnpj: string} }): Promise<void> {
+    attributes.cnpj = attributes.cnpj.replace(/[^\d]+/g, '')
   }
 }

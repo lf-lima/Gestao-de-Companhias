@@ -1,6 +1,8 @@
-import { Table, Column, BeforeCreate, BeforeUpdate } from 'sequelize-typescript'
+import { Table, Column, BeforeCreate, ForeignKey, BelongsTo, BeforeBulkUpdate } from 'sequelize-typescript'
 import BaseModel from './base'
 import moment from 'moment'
+import Company from './company'
+import User from './user'
 
 @Table
 export default class Employee extends BaseModel<Employee> {
@@ -22,16 +24,33 @@ export default class Employee extends BaseModel<Employee> {
   @Column
   ctps!: string
 
-  @BeforeUpdate
+  @ForeignKey(() => Company)
+  companyId!: number
+
+  @BelongsTo(() => Company)
+  company?: Company
+
+  @ForeignKey(() => User)
+  userId!: number
+
+  @BelongsTo(() => User)
+  user?: User
+
   @BeforeCreate
-  static setFullName (instace: Employee): void {
+  static setFullNameCreate (instace: Employee): void {
     instace.fullName = instace.firstName + instace.lastName
   }
 
-  @BeforeUpdate
+  // fazer metodo BeferoBulkCreate
+
   @BeforeCreate
-  static async splitCpf (instance: Employee): Promise<void> {
+  static async splitCpfCreate (instance: Employee): Promise<void> {
     instance.cpf = instance.cpf.replace(/[^\d]+/g, '')
+  }
+
+  @BeforeBulkUpdate
+  static async splitCpfUpdate ({ attributes }: { attributes: { cpf: string } }): Promise<void> {
+    attributes.cpf = attributes.cpf.replace(/[^\d]+/g, '')
   }
 
   public async validateFirstName (firstName: string): Promise<boolean> {

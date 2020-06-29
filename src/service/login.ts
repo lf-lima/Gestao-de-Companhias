@@ -20,7 +20,8 @@ class LoginService {
       }
 
       const token = await user.genToken({
-        id: user.id
+        id: user.id,
+        email: user.email
       })
 
       return { auth: true, token }
