@@ -6,6 +6,7 @@ import userService from '../../service/user'
 
 interface TokenPayload {
   id: number
+  email: string
 }
 
 class Authentication {

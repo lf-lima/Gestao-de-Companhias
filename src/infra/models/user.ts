@@ -32,7 +32,7 @@ export default class User extends BaseModel<User> {
     return response
   }
 
-  public async genToken (payload: { id: number }): Promise<string> {
+  public async genToken (payload: { id: number, email: string }): Promise<string> {
     const token = jwt.sign(payload, authConfig.secret, { expiresIn: 604800 }) // uma semana
     return token
   }
