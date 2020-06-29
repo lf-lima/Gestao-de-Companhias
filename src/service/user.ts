@@ -21,10 +21,9 @@ class UserService {
     }
   ) {
     try {
-      const user = await userRepository.findById(userId, { returnPassword: false }) || new User()
+      const user = await this.findById(userId, { returnPassword: false }) || new User()
 
       if (user.isEmpty()) {
-        await user.addErrors('User not exists')
         return user
       }
 
@@ -53,15 +52,16 @@ class UserService {
     }
   }
 
-  public async findById (userId: number, options: { returnPassword: boolean }) {
+  public async findById (userId: number, options?: { returnPassword: boolean }) {
     try {
-      let user = await userRepository.findById(userId, { returnPassword: false }) || new User()
+      let user = await userRepository.findById(userId) || new User()
 
       if (options) {
         if (options.returnPassword === false) {
-          user = await userRepository.findByEmail(email, { returnPassword: false })
+          user = await userRepository.findById(userId, { returnPassword: false }) || new User()
         }
       }
+
       if (user.isEmpty()) {
         await user.addErrors('User not exists')
       }
@@ -102,7 +102,6 @@ class UserService {
       const user = await this.findById(userId, { returnPassword: false }) || new User()
 
       if (user.isEmpty()) {
-        await user.addErrors('User not exists')
         return user
       }
 

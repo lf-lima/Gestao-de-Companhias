@@ -52,7 +52,7 @@ class UserRepository {
     try {
       await User.update(data, { where: { id: userId } })
 
-      const user = await this.findById(userId)
+      const user = await this.findById(userId, { returnPassword: false })
       return user
     } catch (error) {
       throw new Error(error)

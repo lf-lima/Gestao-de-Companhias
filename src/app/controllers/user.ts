@@ -13,7 +13,7 @@ class UserController {
         return res.status(400).json(errors)
       }
 
-      const responseService = await userService.update(req.body)
+      const responseService = await userService.update({ ...req.body, userId: Number(req.params.userId) })
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())
@@ -27,7 +27,7 @@ class UserController {
 
   public async findById (req: Request, res: Response) {
     try {
-      const responseService = await userService.findById(Number(req.params.findUserId))
+      const responseService = await userService.findById(Number(req.params.findUserId), { returnPassword: false })
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())

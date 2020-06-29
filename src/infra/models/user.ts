@@ -1,9 +1,8 @@
-import { Column, BeforeCreate, BeforeUpdate, HasOne, Table } from 'sequelize-typescript'
+import { Column, BeforeCreate, BeforeUpdate, HasOne, Table, AfterUpdate } from 'sequelize-typescript'
 import BaseModel from './base'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import authConfig from '../../config/auth'
-import validator from 'validator'
 import Company from './company'
 
 @Table
@@ -17,8 +16,8 @@ export default class User extends BaseModel<User> {
   @HasOne(() => Company)
   company?: Company
 
+  @BeforeUpdate // nao ta funcionando
   @BeforeCreate
-  @BeforeUpdate
   static async hashPassword (instance: User): Promise<void> {
     instance.password = await bcrypt.hash(instance.password, 10).then(hash => hash)
   }
