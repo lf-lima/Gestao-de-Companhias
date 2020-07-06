@@ -1,8 +1,15 @@
-import { Table, Column, BeforeCreate, ForeignKey, BelongsTo, BeforeBulkUpdate } from 'sequelize-typescript'
+import { Table, Column, BeforeCreate, ForeignKey, BelongsTo, BeforeBulkUpdate, Scopes } from 'sequelize-typescript'
 import BaseModel from './base'
 import Company from './company'
 import User from './user'
 
+@Scopes(() => ({
+  fromCompany: (companyId: number): any => {
+    return {
+      where: { companyId }
+    }
+  }
+}))
 @Table
 export default class Employee extends BaseModel<Employee> {
   @Column

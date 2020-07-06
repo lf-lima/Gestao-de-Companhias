@@ -18,6 +18,15 @@ const sequelize = new Sequelize({
     timestamps: true,
     defaultScope: {
       attributes: { exclude: ['createdAt', 'updatedAt'] }
+    },
+    scopes: {
+      active: {
+        where: { active: true },
+        attributes: { exclude: ['active'] }
+      },
+      default: {
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      }
     }
   }
 })

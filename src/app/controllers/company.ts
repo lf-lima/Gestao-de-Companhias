@@ -81,8 +81,6 @@ class CompanyController {
 
       return res.status(204).json()
     } catch (error) {
-      console.log(error)
-
       return res.status(500).json({ error: 'Server Internal Error' })
     }
   }

@@ -205,6 +205,16 @@ class EmployeeService {
     }
   }
 
+  public async findAll (companyId: number) {
+    try {
+      const responseRepository = await employeeRepository.findAll(companyId)
+
+      return responseRepository
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   public async deactivate (employeeId: number, companyId: number) {
     try {
       const employee = await this.findById(employeeId, companyId)

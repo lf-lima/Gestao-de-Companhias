@@ -34,8 +34,7 @@ class CompanyRepository {
 
   public async findAll () {
     try {
-      const companies = await Company.findAll({
-        where: { active: true },
+      const companies = await Company.scope(['default', 'active']).findAll({
         attributes: { exclude: ['password'] }
       }) as Company[]
       return companies
@@ -46,7 +45,7 @@ class CompanyRepository {
 
   public async findById (companyId: number) {
     try {
-      const company = await Company.findOne({ where: { id: companyId, active: true } }) as Company
+      const company = await Company.scope(['default', 'active']).findOne({ where: { id: companyId } }) as Company
       return company
     } catch (error) {
       throw new Error(error)
@@ -55,7 +54,7 @@ class CompanyRepository {
 
   public async findByUserId (userId: number) {
     try {
-      const company = await Company.findOne({ where: { userId, active: true } })
+      const company = await Company.scope(['default', 'active']).findOne({ where: { userId } })
       return company
     } catch (error) {
       throw new Error(error)

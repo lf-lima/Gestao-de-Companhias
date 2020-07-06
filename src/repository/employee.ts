@@ -45,11 +45,10 @@ class EmployeeRepository {
 
   public async findById (employeeId: number, companyId: number) {
     try {
-      const employee = await Employee.findOne({
+      const employee = await Employee.scope(['default', 'active']).findOne({
         where: {
           id: employeeId,
-          companyId,
-          active: true
+          companyId
         }
       }) as Employee
 
@@ -61,7 +60,7 @@ class EmployeeRepository {
 
   public async findByUserId (userId: number) {
     try {
-      const employee = await Employee.findOne({ where: { userId, active: true } })
+      const employee = await Employee.scope(['default', 'active']).findOne({ where: { userId } })
       return employee
     } catch (error) {
       throw new Error(error)
@@ -86,9 +85,9 @@ class EmployeeRepository {
     }
   }
 
-  public async findAll () {
+  public async findAll (companyId: number) {
     try {
-      const employees = await Employee.findAll({ where: { active: true } }) as Employee[]
+      const employees = await Employee.scope(['default', 'active', { method: ['fromCompany', companyId] }]).findAll() as Employee[]
       return employees
     } catch (error) {
       throw new Error(error)

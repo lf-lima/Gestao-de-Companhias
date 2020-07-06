@@ -13,8 +13,7 @@ class UserRepository {
 
   public async findAll () {
     try {
-      const users = await User.findAll({
-        where: { active: true },
+      const users = await User.scope(['default', 'active']).findAll({
         attributes: { exclude: ['password'] }
       }) as User[]
       return users
@@ -25,11 +24,11 @@ class UserRepository {
 
   public async findById (userId: number, options?: { returnPassword?: boolean}) {
     try {
-      let user = await User.findOne({ where: { id: userId, active: true } }) as User
+      let user = await User.scope(['default', 'active']).findOne({ where: { id: userId } }) as User
       if (options) {
         if (options.returnPassword === false) {
-          user = await User.findOne({
-            where: { id: userId, active: true },
+          user = await User.scope(['default', 'active']).findOne({
+            where: { id: userId },
             attributes: { exclude: ['password'] }
           }) as User
         }

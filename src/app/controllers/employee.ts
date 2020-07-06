@@ -72,6 +72,16 @@ class EmployeeController {
     }
   }
 
+  public async findAll (req: any, res: Response) {
+    try {
+      const responseService = await employeeService.findAll(Number(req.payload.companyId))
+
+      return res.status(200).json(responseService)
+    } catch (error) {
+      return res.status(500).json({ error: 'Server internal error' })
+    }
+  }
+
   public async deactivate (req: any, res: Response) {
     try {
       const responseService = await employeeService.deactivate(Number(req.params.employeeId), req.payload.companyId)
