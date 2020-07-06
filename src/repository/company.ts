@@ -34,25 +34,37 @@ class CompanyRepository {
 
   public async findAll () {
     try {
-      const companies = await Company.findAll({ attributes: { exclude: ['password'] } }) as Company[]
+      const companies = await Company.findAll({
+        where: { active: true },
+        attributes: { exclude: ['password'] }
+      }) as Company[]
       return companies
     } catch (error) {
       throw new Error(error)
     }
   }
 
-  public async findById (companyId: number): Promise<Company> {
+  public async findById (companyId: number) {
     try {
-      const company = await Company.findByPk(companyId) as Company
+      const company = await Company.findOne({ where: { id: companyId, active: true } }) as Company
       return company
     } catch (error) {
       throw new Error(error)
     }
   }
 
-  public async delete (companyId: number) {
+  public async findByUserId (userId: number) {
     try {
-      await Company.destroy({ where: { id: companyId } })
+      const company = await Company.findOne({ where: { userId, active: true } })
+      return company
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  public async deactivate (companyId: number) {
+    try {
+      await Company.update({ active: false }, { where: { id: companyId } })
       return
     } catch (error) {
       throw new Error(error)

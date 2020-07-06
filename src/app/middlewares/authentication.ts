@@ -1,16 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import authConfig from '../../config/auth'
 import jwt from 'jsonwebtoken'
-import User from '../../infra/models/user'
 import userService from '../../service/user'
 
-interface TokenPayload {
-  id: number
-  email: string
-}
-
 class Authentication {
-  async auth (req: Request, res: Response, next: NextFunction): Promise<void | Response> {
+  async auth (req: any, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const authHeader = req.headers.authorization
 
@@ -36,14 +30,15 @@ class Authentication {
         return res.status(401).json({ error: 'Token malformatted' })
       }
 
-      const payload = jwt.verify(token, authConfig.secret) as TokenPayload
-      const user = await userService.findById(payload.id) || new User()
+      const payload = jwt.verify(token, authConfig.secret) as { userId: number, userEmail: string, companyId: number}
+
+      const user = await userService.findById(payload.userId)
 
       if (user.isEmpty()) {
         return res.status(400).json({ error: 'User not exists, redo your login' })
       }
 
-      req.user = user
+      req.payload = payload
 
       return next()
     } catch (error) {

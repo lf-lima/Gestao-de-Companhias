@@ -51,7 +51,7 @@ class UserController {
 
   public async delete (req: Request, res: Response) {
     try {
-      const responseService = await userService.delete(Number(req.params.userId))
+      const responseService = await userService.deactivate(Number(req.params.userId))
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())

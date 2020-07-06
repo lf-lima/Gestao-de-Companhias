@@ -2,6 +2,7 @@ import companyRepository from '../repository/company'
 import userService from '../service/user'
 import Company from '../infra/models/company'
 import User from '../infra/models/user'
+import Employee from '../infra/models/employee'
 
 class CompanyService {
   public async createCompanyUser (
@@ -46,10 +47,10 @@ class CompanyService {
 
   public async create (
     data: {
-    cnpj: string,
-    fantasyName: string,
-    fullName: string,
-    userId: number
+      cnpj: string,
+      fantasyName: string,
+      fullName: string,
+      userId: number
   }
   ) {
     try {
@@ -74,12 +75,6 @@ class CompanyService {
   }) {
     try {
       const company = await companyRepository.findById(companyId) || new Company()
-      console.log({
-        companyId,
-        cnpj,
-        fantasyName,
-        fullName
-      })
 
       if (company.isEmpty()) {
         await company.addErrors('Company not exists')
@@ -93,7 +88,7 @@ class CompanyService {
       } = {}
 
       if (cnpj) {
-        if (await companyRepository.findByCnpj(cnpj) && company.cnpj !== cnpj) {
+        if (await this.findByCnpj(cnpj) && company.cnpj !== cnpj) {
           await company.addErrors('CNPJ already exists in')
         } else {
           data.cnpj = cnpj
@@ -101,7 +96,7 @@ class CompanyService {
       }
 
       if (fullName) {
-        if (await companyRepository.findByFullName(fullName) && company.fullName !== fullName) {
+        if (await this.findByFullName(fullName) && company.fullName !== fullName) {
           await company.addErrors('Full company name already exists')
         } else {
           data.fullName = fullName
@@ -142,6 +137,16 @@ class CompanyService {
     }
   }
 
+  public async findByUserId (userId: number) {
+    try {
+      const employee = await companyRepository.findByUserId(userId) || new Employee()
+
+      return employee
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   public async findByCnpj (cnpj: string) {
     try {
       cnpj = cnpj.replace(/[^\d]+/g, '')
@@ -163,10 +168,18 @@ class CompanyService {
     }
   }
 
-  public async delete (companyId: number) {
+  public async deactivate (companyId: number) {
     try {
-      await companyRepository.delete(companyId)
-      return
+      const company = await this.findById(companyId)
+
+      if (company.isEmpty()) {
+        return company
+      }
+
+      await userService.deactivate(company.userId)
+      await companyRepository.deactivate(companyId)
+
+      return company
     } catch (error) {
       throw new Error(error)
     }

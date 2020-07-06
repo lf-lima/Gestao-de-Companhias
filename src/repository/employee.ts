@@ -15,7 +15,7 @@ class EmployeeRepository {
     try {
       const employeeCreated = await Employee.create(data)
 
-      const employee = await this.findById(employeeCreated.id)
+      const employee = await this.findById(employeeCreated.id, employeeCreated.companyId)
       return employee
     } catch (error) {
       throw new Error(error)
@@ -24,6 +24,7 @@ class EmployeeRepository {
 
   public async update (
     employeeId: number,
+    companyId: number,
     data: {
       firstName?: string,
       lastName?: string,
@@ -35,16 +36,50 @@ class EmployeeRepository {
     try {
       await Employee.update(data, { where: { id: employeeId } })
 
-      const employee = await this.findById(employeeId)
+      const employee = await this.findById(employeeId, companyId)
       return employee
     } catch (error) {
       throw new Error(error)
     }
   }
 
-  public async findById (employeeId: number) {
+  public async findById (employeeId: number, companyId: number) {
     try {
-      const employee = await Employee.findByPk(employeeId) as Employee
+      const employee = await Employee.findOne({
+        where: {
+          id: employeeId,
+          companyId,
+          active: true
+        }
+      }) as Employee
+
+      return employee
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  public async findByUserId (userId: number) {
+    try {
+      const employee = await Employee.findOne({ where: { userId, active: true } })
+      return employee
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  public async findByCpf (cpf: string) {
+    try {
+      const employee = await Employee.findOne({ where: { cpf } }) as Employee
+      return employee
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  public async findByCtps (ctps: string) {
+    try {
+      const employee = await Employee.findOne({ where: { ctps } }) as Employee
       return employee
     } catch (error) {
       throw new Error(error)
@@ -53,16 +88,21 @@ class EmployeeRepository {
 
   public async findAll () {
     try {
-      const employees = await Employee.findAll() as Employee[]
+      const employees = await Employee.findAll({ where: { active: true } }) as Employee[]
       return employees
     } catch (error) {
       throw new Error(error)
     }
   }
 
-  public async delete (employeeId: number) {
+  public async deactivate (employeeId: number, companyId: number) {
     try {
-      await Employee.destroy({ where: { id: employeeId } })
+      await Employee.update({ active: false }, {
+        where: {
+          id: employeeId,
+          companyId
+        }
+      })
       return
     } catch (error) {
       throw new Error(error)

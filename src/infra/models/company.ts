@@ -13,6 +13,9 @@ export default class Company extends BaseModel<Company> {
   @Column
   fullName!: string
 
+  @Column({ defaultValue: true })
+  active!: boolean
+
   @Column
   @ForeignKey(() => User)
   userId!: number
@@ -26,7 +29,9 @@ export default class Company extends BaseModel<Company> {
   }
 
   @BeforeBulkUpdate
-  static async splitCnpjUpdate ({ attributes }: { attributes: { cnpj: string} }): Promise<void> {
-    attributes.cnpj = attributes.cnpj.replace(/[^\d]+/g, '')
+  static async splitCnpjUpdate ({ attributes }: { attributes: { cnpj?: string} }): Promise<void> {
+    if (attributes.cnpj) {
+      attributes.cnpj = attributes.cnpj.replace(/[^\d]+/g, '')
+    }
   }
 }

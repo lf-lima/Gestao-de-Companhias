@@ -32,7 +32,7 @@ class UserService {
       } = {}
 
       if (email) {
-        if (await userRepository.findByEmail(email)) {
+        if (await this.findByEmail(email) && user.email !== email) {
           await user.addErrors('User already exists')
         } else {
           data.email = email
@@ -97,7 +97,7 @@ class UserService {
     }
   }
 
-  public async delete (userId: number) {
+  public async deactivate (userId: number) {
     try {
       const user = await this.findById(userId, { returnPassword: false }) || new User()
 
@@ -105,9 +105,9 @@ class UserService {
         return user
       }
 
-      await userRepository.delete(userId)
+      await userRepository.deactivate(userId)
 
-      return new User()
+      return user
     } catch (error) {
       throw new Error(error)
     }

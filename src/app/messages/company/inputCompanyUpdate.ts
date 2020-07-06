@@ -1,4 +1,4 @@
-import { IsString, Length, IsInt, IsNotEmpty, IsOptional } from 'class-validator'
+import { IsString, Length, IsInt, IsNotEmpty, IsOptional, Min } from 'class-validator'
 import { IsCnpj } from '../../../config/decorators/others'
 import InputBase from '../base/input'
 
@@ -10,6 +10,7 @@ export class InputCompanyUpdate extends InputBase {
 
   @IsNotEmpty()
   @IsInt()
+  @Min(1)
   companyId!: number
 
   @IsOptional()

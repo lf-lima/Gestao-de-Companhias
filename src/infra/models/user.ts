@@ -13,6 +13,9 @@ export default class User extends BaseModel<User> {
   @Column
   password!: string
 
+  @Column({ defaultValue: true })
+  active!: boolean
+
   @HasOne(() => Company)
   company?: Company
 
@@ -22,8 +25,10 @@ export default class User extends BaseModel<User> {
   }
 
   @BeforeBulkUpdate
-  static async hashPasswordUpdate ({ attributes }: { attributes: { password: string }}): Promise<void> {
-    attributes.password = await bcrypt.hash(attributes.password, 10).then(hash => hash)
+  static async hashPasswordUpdate ({ attributes }: { attributes: { password?: string }}): Promise<void> {
+    if (attributes.password) {
+      attributes.password = await bcrypt.hash(attributes.password, 10).then(hash => hash)
+    }
   }
 
   public async checkPassword (password: string, passwordDb: string): Promise<boolean> {
@@ -36,7 +41,7 @@ export default class User extends BaseModel<User> {
     return response
   }
 
-  public async genToken (payload: { id: number, email: string }): Promise<string> {
+  public async genToken (payload: { userId: number, userEmail: string, companyId: number }): Promise<string> {
     const token = jwt.sign(payload, authConfig.secret, { expiresIn: 604800 }) // uma semana
     return token
   }

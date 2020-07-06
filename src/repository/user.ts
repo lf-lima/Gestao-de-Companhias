@@ -13,7 +13,10 @@ class UserRepository {
 
   public async findAll () {
     try {
-      const users = await User.findAll({ attributes: { exclude: ['password'] } }) as User[]
+      const users = await User.findAll({
+        where: { active: true },
+        attributes: { exclude: ['password'] }
+      }) as User[]
       return users
     } catch (error) {
       throw new Error(error)
@@ -22,10 +25,13 @@ class UserRepository {
 
   public async findById (userId: number, options?: { returnPassword?: boolean}) {
     try {
-      let user = await User.findByPk(userId) as User
+      let user = await User.findOne({ where: { id: userId, active: true } }) as User
       if (options) {
         if (options.returnPassword === false) {
-          user = await User.findByPk(userId, { attributes: { exclude: ['password'] } }) as User
+          user = await User.findOne({
+            where: { id: userId, active: true },
+            attributes: { exclude: ['password'] }
+          }) as User
         }
       }
       return user
@@ -59,9 +65,9 @@ class UserRepository {
     }
   }
 
-  public async delete (userId: number) {
+  public async deactivate (userId: number) {
     try {
-      await User.destroy({ where: { id: userId } })
+      await User.update({ active: false }, { where: { id: userId } })
       return
     } catch (error) {
       throw new Error(error)

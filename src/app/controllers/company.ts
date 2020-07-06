@@ -47,8 +47,6 @@ class CompanyController {
 
       return res.status(200).json(responseService)
     } catch (error) {
-      console.log(error)
-
       return res.status(500).json({ error: 'Server Internal Errror' })
     }
   }
@@ -77,12 +75,14 @@ class CompanyController {
     }
   }
 
-  public async delete (req: Request, res: Response) {
+  public async deactivate (req: Request, res: Response) {
     try {
-      await companyService.delete(Number(req.params.companyId))
+      await companyService.deactivate(Number(req.params.companyId))
 
       return res.status(204).json()
     } catch (error) {
+      console.log(error)
+
       return res.status(500).json({ error: 'Server Internal Error' })
     }
   }
