@@ -1,4 +1,4 @@
-import User from '../infra/models/user'
+import User from '../infra/models/user.model'
 
 class UserRepository {
   public async create (data: { email: string, password: string}) {

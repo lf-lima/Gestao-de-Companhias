@@ -1,4 +1,4 @@
-import Employee from '../infra/models/employee'
+import Employee from '../infra/models/employee.model'
 
 class EmployeeRepository {
   public async create (

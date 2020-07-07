@@ -1,4 +1,4 @@
-import User from '../infra/models/user'
+import User from '../infra/models/user.model'
 import userService from '../service/user'
 import employeeService from '../service/employee'
 import companyService from '../service/company'

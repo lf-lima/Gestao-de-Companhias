@@ -3,7 +3,7 @@ import BaseModel from './base'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import authConfig from '../../config/auth'
-import Company from './company'
+import Company from './company.model'
 
 @Table
 export default class User extends BaseModel<User> {

@@ -1,8 +1,6 @@
 import { Sequelize } from 'sequelize-typescript'
-import company from '../models/company'
-import user from '../models/user'
-import employee from '../models/employee'
 import { config } from 'dotenv'
+import path from 'path'
 config()
 
 const sequelize = new Sequelize({
@@ -12,7 +10,7 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   storage: ':memory:',
-  models: [user, company, employee],
+  models: [path.resolve(__dirname, '..', 'models', '*.model.ts')],
   define: {
     underscored: true,
     timestamps: true,

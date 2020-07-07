@@ -1,5 +1,4 @@
-import Company from '../infra/models/company'
-
+import Company from '../infra/models/company.model'
 class CompanyRepository {
   public async create (data: {
     cnpj: string,

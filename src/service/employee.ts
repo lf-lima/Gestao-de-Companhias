@@ -1,8 +1,8 @@
 import employeeRepository from '../repository/employee'
 import userService from '../service/user'
 import companyService from '../service/company'
-import Employee from '../infra/models/employee'
-import User from '../infra/models/user'
+import Employee from '../infra/models/employee.model'
+import User from '../infra/models/user.model'
 
 class EmployeeService {
   public async createEmployeeUser (

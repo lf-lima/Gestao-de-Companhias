@@ -1,4 +1,4 @@
-import User from '../infra/models/user'
+import User from '../infra/models/user.model'
 import userRepository from '../repository/user'
 
 class UserService {

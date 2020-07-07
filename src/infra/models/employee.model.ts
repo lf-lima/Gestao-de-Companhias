@@ -1,7 +1,7 @@
 import { Table, Column, BeforeCreate, ForeignKey, BelongsTo, BeforeBulkUpdate, Scopes } from 'sequelize-typescript'
 import BaseModel from './base'
-import Company from './company'
-import User from './user'
+import Company from './company.model'
+import User from './user.model'
 
 @Scopes(() => ({
   fromCompany: (companyId: number): any => {
