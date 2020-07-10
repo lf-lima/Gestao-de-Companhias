@@ -60,7 +60,7 @@ class EmployeeController {
 
   public async findById (req: any, res: Response) {
     try {
-      const responseService = await employeeService.findById(Number(req.params.employeeId), req.payload.companyId)
+      const responseService = await employeeService.findById(Number(req.params.findEmployeeId), req.payload.companyId)
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())

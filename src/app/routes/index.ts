@@ -3,8 +3,10 @@ import company from './company'
 import login from './login'
 import user from './user'
 import employee from './employee'
+import profile from './profile'
+import permission from './permission'
 
-const routers = [company, login, user, employee]
+const routers = [company, login, user, employee, profile, permission]
 
 class MainRouter {
   public router = Router()
