@@ -1,5 +1,6 @@
 import BaseRouter from './base'
 import profileController from '../controllers/profile'
+import profilePermissionsController from '../controllers/profilePermissions'
 import authMiddleware from '../middlewares/authentication'
 
 class ProfileRouter extends BaseRouter {
@@ -11,6 +12,10 @@ class ProfileRouter extends BaseRouter {
     this.router.post('/', authMiddleware.auth, profileController.create)
     this.router.put('/:profileId', authMiddleware.auth, profileController.update)
     this.router.delete('/:profileId', authMiddleware.auth, profileController.delete)
+
+    // Permissions
+    this.router.post('/:profileId/permission', authMiddleware.auth, profilePermissionsController.addPermission)
+    this.router.delete('/:profileId/permission/:permissionId', authMiddleware.auth, profilePermissionsController.removePermission)
   }
 }
 

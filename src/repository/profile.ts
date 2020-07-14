@@ -1,3 +1,4 @@
+import Permissions from '../infra/models/permissions.model'
 import Profile from '../infra/models/profile.model'
 
 class ProfileRepository {
@@ -32,7 +33,7 @@ class ProfileRepository {
 
   public async findAll () {
     try {
-      const profiles = await Profile.findAll() as Profile[]
+      const profiles = await Profile.findAll({ include: [{ model: Permissions, through: { attributes: [] } }] }) as Profile[]
       return profiles
     } catch (error) {
       throw new Error(error)

@@ -11,5 +11,5 @@ export default class ProfilePermissions extends BaseModel<ProfilePermissions> {
 
   @ForeignKey(() => Permissions)
   @Column
-  permissionsId!: number
+  permissionId!: number
 }
