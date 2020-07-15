@@ -1,7 +1,7 @@
 import User from '../infra/models/user.model'
 
 class UserRepository {
-  public async create (data: { email: string, password: string}) {
+  public async create (data: { profileId: number, email: string, password: string}) {
     try {
       const userCreated = await User.create(data) as User
       const user = await this.findById(userCreated.id, { returnPassword: false })
@@ -53,7 +53,7 @@ class UserRepository {
     }
   }
 
-  public async update (userId: number, data: { email?: string, password?: string}) {
+  public async update (userId: number, data: { profileId?: number, email?: string, password?: string}) {
     try {
       await User.update(data, { where: { id: userId } })
 

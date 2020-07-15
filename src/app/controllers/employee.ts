@@ -1,16 +1,15 @@
 import { Request, Response } from 'express'
 import employeeService from '../../service/employee'
-import { InputEmployeeUserCreate } from '../messages/employee/inputUserEmployeeCreate'
+import { InputEmployeeUserCreate, UserCreate, EmployeeCreate } from '../messages/employee/inputUserEmployeeCreate'
 import { InputEmployeeUpdate } from '../messages/employee/inputEmployeeUpdate'
 
 class EmployeeController {
   public async createEmployeeUser (req: any, res: Response) {
     try {
       const inputEmployeeUserCreate = new InputEmployeeUserCreate({
-        user: req.body.user, employee: { ...req.body.employee, companyId: req.payload.companyId }
+        user: new UserCreate(req.body.user), employee: new EmployeeCreate({ ...req.body.employee, companyId: req.payload.companyId })
       })
-
-      const errors = inputEmployeeUserCreate.validate()
+      const errors = await inputEmployeeUserCreate.validate()
 
       if (inputEmployeeUserCreate.hasError) {
         return res.status(400).json(errors)

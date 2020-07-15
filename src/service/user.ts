@@ -1,9 +1,10 @@
 import User from '../infra/models/user.model'
 import userRepository from '../repository/user'
+import profileService from './profile'
 
 class UserService {
   public async create (
-    data : { email: string, password: string, confirmPassword: string }
+    data : { profileId: number, email: string, password: string, confirmPassword: string }
   ) {
     try {
       const responseRepository = await userRepository.create(data)
@@ -15,9 +16,9 @@ class UserService {
 
   public async update (
     {
-      userId, email, password, confirmPassword
+      userId, profileId, email, password, confirmPassword
     }: {
-      userId: number, email?: string, password?: string, confirmPassword?: string
+      userId: number, profileId: number, email?: string, password?: string, confirmPassword?: string
     }
   ) {
     try {
@@ -28,7 +29,7 @@ class UserService {
       }
 
       const data: {
-        email?: string, password?: string
+        email?: string, password?: string, profileId?: number,
       } = {}
 
       if (email) {
@@ -41,6 +42,15 @@ class UserService {
 
       if (password && confirmPassword) {
         data.password = password
+      }
+
+      if (profileId) {
+        const profile = await profileService.findById(profileId)
+        if (profile.isEmpty()) {
+          await user.addErrors('Profile not exists')
+        } else {
+          data.profileId = profileId
+        }
       }
 
       if (user.hasError) return user

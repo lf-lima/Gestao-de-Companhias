@@ -7,6 +7,7 @@ import User from '../infra/models/user.model'
 class EmployeeService {
   public async createEmployeeUser (
     userData: {
+      profileId: number,
       email: string,
       password: string,
       confirmPassword: string

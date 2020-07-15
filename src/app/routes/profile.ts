@@ -7,15 +7,15 @@ class ProfileRouter extends BaseRouter {
   constructor () {
     super('/profile')
 
-    this.router.get('/', authMiddleware.auth, profileController.findAll)
-    this.router.get('/:findProfileId', authMiddleware.auth, profileController.findById)
-    this.router.post('/', authMiddleware.auth, profileController.create)
-    this.router.put('/:profileId', authMiddleware.auth, profileController.update)
-    this.router.delete('/:profileId', authMiddleware.auth, profileController.delete)
+    this.router.get('/', profileController.findAll)
+    this.router.get('/:findProfileId', profileController.findById)
+    this.router.post('/', profileController.create)
+    this.router.put('/:profileId', profileController.update)
+    this.router.delete('/:profileId', profileController.delete)
 
     // Permissions
-    this.router.post('/:profileId/permission', authMiddleware.auth, profilePermissionsController.addPermission)
-    this.router.delete('/:profileId/permission/:permissionId', authMiddleware.auth, profilePermissionsController.removePermission)
+    this.router.post('/:profileId/permission', profilePermissionsController.addPermission)
+    this.router.delete('/:profileId/permission/:permissionId', profilePermissionsController.removePermission)
   }
 }
 

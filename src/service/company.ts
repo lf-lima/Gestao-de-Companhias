@@ -1,5 +1,6 @@
 import companyRepository from '../repository/company'
 import userService from '../service/user'
+import profileService from '../service/profile'
 import Company from '../infra/models/company.model'
 import User from '../infra/models/user.model'
 import Employee from '../infra/models/employee.model'
@@ -7,6 +8,7 @@ import Employee from '../infra/models/employee.model'
 class CompanyService {
   public async createCompanyUser (
     userData: {
+      profileId: number,
       email: string,
       password: string,
       confirmPassword: string
@@ -21,6 +23,12 @@ class CompanyService {
 
       if (await userService.findByEmail(userData.email)) {
         await user.addErrors('Email already exists')
+      }
+
+      const profile = await profileService.findById(userData.profileId)
+
+      if (profile.isEmpty()) {
+        await user.addErrors('Profile not exists')
       }
 
       let company = new Company()

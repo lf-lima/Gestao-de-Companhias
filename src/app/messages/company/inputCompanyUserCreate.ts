@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length, IsEmail, ValidateNested } from 'class-validator'
+import { IsNotEmpty, IsString, Length, IsEmail, ValidateNested, IsInt, Min } from 'class-validator'
 import { IsCnpj, Match } from '../../../config/decorators/others'
 
 import InputBase from '../base/input'
@@ -45,6 +45,11 @@ export class UserCreate {
     message: 'Password and confirmPassword are different'
   })
   confirmPassword!: string
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  profileId!: number
 }
 
 export class InputCompanyUserCreate extends InputBase {

@@ -1,9 +1,10 @@
-import { Column, BeforeCreate, HasOne, Table, BeforeBulkUpdate } from 'sequelize-typescript'
+import { Column, BeforeCreate, HasOne, Table, BeforeBulkUpdate, ForeignKey, BelongsTo } from 'sequelize-typescript'
 import BaseModel from './base'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import authConfig from '../../config/auth'
 import Company from './company.model'
+import Profile from './profile.model'
 
 @Table
 export default class User extends BaseModel<User> {
@@ -18,6 +19,13 @@ export default class User extends BaseModel<User> {
 
   @HasOne(() => Company)
   company?: Company
+
+  @ForeignKey(() => Profile)
+  @Column
+  profileId!: number
+
+  @BelongsTo(() => Profile)
+  profile?: Profile
 
   @BeforeCreate
   static async hashPasswordCreate (instance: User): Promise<void> {

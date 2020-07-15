@@ -23,6 +23,11 @@ export class UserCreate {
     message: 'Password and confirmPassword are different'
   })
   confirmPassword!: string
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  profileId!: number
 }
 
 export class EmployeeCreate {
