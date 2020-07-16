@@ -1,4 +1,4 @@
-import { Column, BeforeCreate, HasOne, Table, BeforeBulkUpdate, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Column, BeforeCreate, HasOne, Table, BeforeBulkUpdate, ForeignKey, BelongsTo, Scopes } from 'sequelize-typescript'
 import BaseModel from './base'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -6,6 +6,11 @@ import authConfig from '../../config/auth'
 import Company from './company.model'
 import Profile from './profile.model'
 
+@Scopes(() => ({
+  includeProfile: {
+    include: [Profile]
+  }
+}))
 @Table
 export default class User extends BaseModel<User> {
   @Column
@@ -49,7 +54,12 @@ export default class User extends BaseModel<User> {
     return response
   }
 
-  public async genToken (payload: { userId: number, userEmail: string, companyId: number }): Promise<string> {
+  public async genToken (payload: {
+    userId: number,
+    userEmail: string,
+    companyId: number,
+    permissions: { id: number, name:string, description: string}[]
+  }): Promise<string> {
     const token = jwt.sign(payload, authConfig.secret, { expiresIn: 604800 }) // uma semana
     return token
   }
