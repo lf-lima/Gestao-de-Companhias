@@ -1,6 +1,7 @@
 import employeeRepository from '../repository/employee'
 import userService from '../service/user'
 import companyService from '../service/company'
+import profileService from '../service/profile'
 import Employee from '../infra/models/employee.model'
 import User from '../infra/models/user.model'
 
@@ -26,6 +27,12 @@ class EmployeeService {
 
       if (await userService.findByEmail(userData.email)) {
         await user.addErrors('Email already exists')
+      }
+
+      const profile = await profileService.findById(userData.profileId)
+
+      if (profile.isEmpty()) {
+        await user.addErrors('Profile not exists')
       }
 
       let employee = new Employee()
