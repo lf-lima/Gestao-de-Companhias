@@ -1,6 +1,6 @@
 import { Table, Column, BelongsToMany, HasMany, DefaultScope } from 'sequelize-typescript'
 import BaseModel from './base'
-import Permissions from './permissions.model'
+import Permissions from './permission.model'
 import ProfilePermissions from './profilePermissions.model'
 import User from './user.model'
 

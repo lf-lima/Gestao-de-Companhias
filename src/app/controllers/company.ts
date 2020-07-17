@@ -4,6 +4,29 @@ import { InputCompanyUserCreate, UserCreate, CompanyCreate } from '../messages/c
 import { InputCompanyUpdate } from '../messages/company/inputCompanyUpdate'
 
 class CompanyController {
+  public restricted: Array<{ method: string, permissions: string[]}> = [
+    {
+      method: 'createCompanyUser',
+      permissions: ['createCompany']
+    },
+    {
+      method: 'update',
+      permissions: ['createCompany']
+    },
+    {
+      method: 'findAll',
+      permissions: ['listCompany']
+    },
+    {
+      method: 'findById',
+      permissions: ['listCompany']
+    },
+    {
+      method: 'deactivate',
+      permissions: ['createCompany']
+    }
+  ]
+
   public async createCompanyUser (req: Request, res: Response) {
     try {
       const inputCompanyUserCreate =

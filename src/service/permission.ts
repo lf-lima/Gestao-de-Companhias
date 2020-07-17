@@ -1,4 +1,4 @@
-import Permission from '../infra/models/permissions.model'
+import Permission from '../infra/models/permission.model'
 import permissionRepository from '../repository/permissions'
 
 class PermissionService {

@@ -3,6 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import routes from './app/routes/index'
 import sequelize from './infra/database/index'
+import DbSeeder from '../seeders/seeder'
 
 class App {
   public server: express.Application
@@ -23,6 +24,7 @@ class App {
 
   public async database (): Promise<void> {
     await sequelize.sync({ force: true })
+    await DbSeeder.run()
   }
 
   public routes (): void {

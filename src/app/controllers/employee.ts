@@ -4,6 +4,29 @@ import { InputEmployeeUserCreate, UserCreate, EmployeeCreate } from '../messages
 import { InputEmployeeUpdate } from '../messages/employee/inputEmployeeUpdate'
 
 class EmployeeController {
+  public restricted: Array<{ method: string, permissions: string[]}> = [
+    {
+      method: 'createEmployeeUser',
+      permissions: ['createEmployee::mine', 'createEmployee::all']
+    },
+    {
+      method: 'update',
+      permissions: ['createEmployee::mine', 'createEmployee::all']
+    },
+    {
+      method: 'findAll',
+      permissions: ['listEmployee::mine']
+    },
+    {
+      method: 'findById',
+      permissions: ['listEmployee::mine']
+    },
+    {
+      method: 'deactivate',
+      permissions: ['createEmployee::mine ']
+    }
+  ]
+
   public async createEmployeeUser (req: any, res: Response) {
     try {
       const inputEmployeeUserCreate = new InputEmployeeUserCreate({
