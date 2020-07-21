@@ -6,11 +6,11 @@ class PermissionRouter extends BaseRouter {
   constructor () {
     super('/permission')
 
-    this.router.get('/', permissionController.findAll)
-    this.router.get('/:findPermissionId', permissionController.findById)
-    this.router.post('/', permissionController.create)
-    this.router.put('/:permissionId', permissionController.update)
-    this.router.delete('/:permissionId', permissionController.delete)
+    this.router.get('/', authMiddleware.auth, permissionController.findAll)
+    this.router.get('/:findPermissionId', authMiddleware.auth, permissionController.findById)
+    this.router.post('/', authMiddleware.auth, permissionController.create)
+    this.router.put('/:permissionId', authMiddleware.auth, permissionController.update)
+    this.router.delete('/:permissionId', authMiddleware.auth, permissionController.delete)
   }
 }
 

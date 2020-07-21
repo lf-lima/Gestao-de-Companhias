@@ -52,8 +52,16 @@ class ProfilePermissionsSeeder {
       description: 'admissed create profile'
     },
     {
+      name: 'listProfile',
+      description: 'admissed list profile'
+    },
+    {
       name: 'createPermission',
       description: 'admissed create permission'
+    },
+    {
+      name: 'listPermission',
+      description: 'admissed list permission'
     }
   ]
 
@@ -65,7 +73,9 @@ class ProfilePermissionsSeeder {
         'listCompany',
         'createEmployee::all',
         'listEmployee::all',
-        'newFeature'
+        'newFeature',
+        'createProfile',
+        'createPermission'
       ]
     },
     {

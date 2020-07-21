@@ -7,11 +7,11 @@ class EmployeeController {
   public restricted: Array<{ method: string, permissions: string[]}> = [
     {
       method: 'createEmployeeUser',
-      permissions: ['createEmployee::mine', 'createEmployee::all']
+      permissions: ['createEmployee::mine']
     },
     {
       method: 'update',
-      permissions: ['createEmployee::mine', 'createEmployee::all']
+      permissions: ['createEmployee::mine']
     },
     {
       method: 'findAll',

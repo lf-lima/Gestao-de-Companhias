@@ -4,6 +4,39 @@ import { InputProfileUpdate } from '../messages/profile/inputProfileUpdate'
 import profileService from '../../service/profile'
 
 class ProfileController {
+  public restricted: Array<{ method: string, permissions: string[]}> = [
+    {
+      method: 'create',
+      permissions: [
+        'createProfile'
+      ]
+    },
+    {
+      method: 'update',
+      permissions: [
+        'createProfile'
+      ]
+    },
+    {
+      method: 'findAll',
+      permissions: [
+        'listProfile'
+      ]
+    },
+    {
+      method: 'findById',
+      permissions: [
+        'listProfile'
+      ]
+    },
+    {
+      method: 'delete',
+      permissions: [
+        'createProfile'
+      ]
+    }
+  ]
+
   public async create (req: Request, res: Response) {
     try {
       const inputProfileCreate = new InputProfileCreate(req.body)

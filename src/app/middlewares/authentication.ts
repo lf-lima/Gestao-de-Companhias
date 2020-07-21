@@ -3,8 +3,8 @@ import authConfig from '../../config/auth'
 import jwt from 'jsonwebtoken'
 import userService from '../../service/user'
 
-class Authentication {
-  async auth (req: any, res: Response, next: NextFunction): Promise<void | Response> {
+class AuthenticationMiddleware {
+  async auth (req: any, res: Response, next: NextFunction) {
     try {
       const authHeader = req.headers.authorization
 
@@ -30,7 +30,15 @@ class Authentication {
         return res.status(401).json({ error: 'Token malformatted' })
       }
 
-      const payload = jwt.verify(token, authConfig.secret) as { userId: number, userEmail: string, companyId: number}
+      const payload = jwt.verify(token, authConfig.secret) as {
+        userId: number,
+        userEmail: string,
+        companyId: number,
+        permissions: {
+          id: number;
+          name: string;
+          description: string;
+      }[] }
 
       const user = await userService.findById(payload.userId)
 
@@ -47,4 +55,4 @@ class Authentication {
   }
 }
 
-export default new Authentication()
+export default new AuthenticationMiddleware()

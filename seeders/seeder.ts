@@ -9,6 +9,7 @@ class Seeder {
     for (const seeder of this.seeders) {
       await seeder.run()
     }
+    console.log('SEEDERS OK')
   }
 }
 

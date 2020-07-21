@@ -6,10 +6,6 @@ import { InputCompanyUpdate } from '../messages/company/inputCompanyUpdate'
 class CompanyController {
   public restricted: Array<{ method: string, permissions: string[]}> = [
     {
-      method: 'createCompanyUser',
-      permissions: ['createCompany']
-    },
-    {
       method: 'update',
       permissions: ['createCompany']
     },

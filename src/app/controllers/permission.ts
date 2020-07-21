@@ -4,6 +4,39 @@ import permissionService from '../../service/permission'
 import { InputPermissionUpdate } from '../messages/permission/inputPermissionUpdate'
 
 class PermissionController {
+  public restricted: Array<{ method: string, permissions: string[]}> = [
+    {
+      method: 'create',
+      permissions: [
+        'createPermission'
+      ]
+    },
+    {
+      method: 'update',
+      permissions: [
+        'createPermission'
+      ]
+    },
+    {
+      method: 'findAll',
+      permissions: [
+        'listPermission'
+      ]
+    },
+    {
+      method: 'findById',
+      permissions: [
+        'listPermission'
+      ]
+    },
+    {
+      method: 'delete',
+      permissions: [
+        'createPermission'
+      ]
+    }
+  ]
+
   public async create (req: Request, res: Response) {
     try {
       const inputPermissionCreate = new InputPermissionCreate(req.body)
