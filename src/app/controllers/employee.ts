@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import employeeService from '../../service/employee'
 import { InputEmployeeUserCreate, UserCreate, EmployeeCreate } from '../messages/employee/inputUserEmployeeCreate'
 import { InputEmployeeUpdate } from '../messages/employee/inputEmployeeUpdate'
+import User from '../../infra/models/user.model'
+import Employee from '../../infra/models/employee.model'
 
 class EmployeeController {
   public restricted: Array<{ method: string, permissions: string[]}> = [
@@ -32,15 +34,29 @@ class EmployeeController {
       const inputEmployeeUserCreate = new InputEmployeeUserCreate({
         user: new UserCreate(req.body.user), employee: new EmployeeCreate({ ...req.body.employee, companyId: req.payload.companyId })
       })
+
       const errors = await inputEmployeeUserCreate.validate()
 
       if (inputEmployeeUserCreate.hasError) {
         return res.status(400).json(errors)
       }
 
-      const responseService = await employeeService.createEmployeeUser(
-        req.body.user, { ...req.body.employee, companyId: req.payload.companyId }
-      )
+      let responseService: {
+        user: User,
+        employee: Employee
+      }
+
+      const payloadPermissions = req.payload.permissions as { name: string }[]
+
+      if (payloadPermissions.find(objPermission => objPermission.name === 'createEmployee::all')) {
+        responseService = await employeeService.createEmployeeUser(
+          req.body.user, req.body.employee
+        )
+      } else {
+        responseService = await employeeService.createEmployeeUser(
+          req.body.user, { ...req.body.employee, companyId: req.payload.companyId }
+        )
+      }
 
       const { user, employee } = responseService
 
@@ -66,9 +82,19 @@ class EmployeeController {
         return res.status(400).json(errors)
       }
 
-      const responseService = await employeeService.update({
-        ...req.body, employeeId: Number(req.params.employeeId), companyId: req.payload.companyId
-      })
+      let responseService: Employee
+
+      const payloadPermissions = req.payload.permissions as { name: string }[]
+
+      if (payloadPermissions.find(objPermission => objPermission.name === 'createEmployee::all')) {
+        responseService = await employeeService.update({
+          ...req.body, employeeId: Number(req.params.employeeId)
+        })
+      } else {
+        responseService = await employeeService.update({
+          ...req.body, employeeId: Number(req.params.employeeId), companyId: req.payload.companyId
+        })
+      }
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())
@@ -82,7 +108,15 @@ class EmployeeController {
 
   public async findById (req: any, res: Response) {
     try {
-      const responseService = await employeeService.findById(Number(req.params.findEmployeeId), req.payload.companyId)
+      let responseService: Employee
+
+      const payloadPermissions = req.payload.permissions as { name: string }[]
+
+      if (payloadPermissions.find(objPermission => objPermission.name === 'listEmployee::all')) {
+        responseService = await employeeService.findById(Number(req.params.findEmployeeId), req.body.companyId)
+      } else {
+        responseService = await employeeService.findById(Number(req.params.findEmployeeId), req.payload.companyId)
+      }
 
       if (responseService.hasError) {
         return res.status(400).json(await responseService.getErrors())
@@ -96,7 +130,15 @@ class EmployeeController {
 
   public async findAll (req: any, res: Response) {
     try {
-      const responseService = await employeeService.findAll(Number(req.payload.companyId))
+      let responseService: Employee[]
+
+      const payloadPermissions = req.payload.permissions as { name: string }[]
+
+      if (payloadPermissions.find(objPermission => objPermission.name === 'listEmployee::all')) {
+        responseService = await employeeService.findAll(req.body.companyId)
+      } else {
+        responseService = await employeeService.findAll(Number(req.payload.companyId))
+      }
 
       return res.status(200).json(responseService)
     } catch (error) {
@@ -106,7 +148,15 @@ class EmployeeController {
 
   public async deactivate (req: any, res: Response) {
     try {
-      const responseService = await employeeService.deactivate(Number(req.params.employeeId), req.payload.companyId)
+      let responseService: Employee
+
+      const payloadPermissions = req.payload.permissions as { name: string }[]
+
+      if (payloadPermissions.find(objPermission => objPermission.name === 'createEmployee::all')) {
+        responseService = await employeeService.deactivate(Number(req.params.employeeId), req.body.companyId)
+      } else {
+        responseService = await employeeService.deactivate(Number(req.params.employeeId), req.payload.companyId)
+      }
 
       if (responseService.hasError) {
         return res.status(500).json(await responseService.getErrors())
