@@ -27,6 +27,13 @@ class PermissionMiddleware {
 
                 if (
                   restrictedPermissionName === payloadPermissionName &&
+                  restrictedTypeFilter === payloadTypeFilter
+                ) {
+                  return permissionObj
+                }
+
+                if (
+                  restrictedPermissionName === payloadPermissionName &&
                   restrictedTypeFilter === 'mine' &&
                   payloadTypeFilter === 'all'
                 ) {

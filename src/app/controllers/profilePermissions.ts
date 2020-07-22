@@ -2,6 +2,21 @@ import { Request, Response } from 'express'
 import profilePermissionsService from '../../service/profilePermissions'
 
 class ProfilePermissionsController {
+  public restricted: Array<{ method: string, permissions: string[]}> = [
+    {
+      method: 'addPermission',
+      permissions: [
+        'addPermission'
+      ]
+    },
+    {
+      method: 'removePermission',
+      permissions: [
+        'addPermission'
+      ]
+    }
+  ]
+
   public async addPermission (req: Request, res: Response) {
     try {
       const responseService = await profilePermissionsService.addPermission(Number(req.params.profileId), req.body.permissionId)
