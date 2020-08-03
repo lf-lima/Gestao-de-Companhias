@@ -45,7 +45,7 @@ class PermissionMiddleware {
             })
 
             if (!match) {
-              return res.status(400).json({ error: 'Not authorized' })
+              return res.status(401).json({ error: 'Not authorized' })
             }
           }
 
